@@ -23,10 +23,21 @@ export interface ProjectColophon {
   release: string;
 }
 
+export interface ProjectMediaItem {
+  type: 'image' | 'video';
+  src: string;
+  poster?: string;
+  alt?: string;
+  caption?: string | MultilingualText;
+  aspectRatio?: string;
+}
+
 export interface ProjectDetailedContent {
   about: MultilingualText;
   designApproach: MultilingualArray;
   visuals: ProjectVisual[];
+  interactionExperience?: MultilingualArray;
+  technicalApproach?: MultilingualArray;
   editorialQuote?: MultilingualText;
   colophon?: ProjectColophon;
   quoteAuthor?: MultilingualText;
@@ -87,6 +98,12 @@ export interface Project {
   layoutVariant?: LayoutVariant;
   handwrittenNote?: MultilingualText;
   offsetMargin?: string;
+  // Real Project Media presentation fields
+  media?: ProjectMediaItem[];
+  heroMedia?: ProjectMediaItem;
+  galleryMedia?: ProjectMediaItem[];
+  mobileMedia?: ProjectMediaItem;
+  detailMedia?: ProjectMediaItem[];
   detailedContent: ProjectDetailedContent;
 }
 

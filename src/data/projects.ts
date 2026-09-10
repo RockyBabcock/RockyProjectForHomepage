@@ -84,6 +84,34 @@ export const projectsData: Project[] = [
     ],
     github: 'https://github.com/rockybuildingaiweb3-boop/svg-downloader',
     demo: 'https://svg-downloader-tau.vercel.app',
+    // Real Project Media presentation configuration
+    heroMedia: {
+      type: 'image',
+      src: '', // Awaiting production capture upload; renders high-end neutral specimen plate
+      poster: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85',
+      alt: 'SVG Downloader — Verified Multi-Source Asset Registry',
+      caption: 'SVG Downloader: Production interface showing multi-source catalog discovery and cryptographic SHA-256 verification',
+    },
+    galleryMedia: [
+      {
+        type: 'image',
+        src: '',
+        alt: 'SVG Downloader — Multi-Source Search',
+        caption: 'Instant vector discovery across Simple Icons, Devicon, and Iconify catalogs',
+      },
+      {
+        type: 'image',
+        src: '',
+        alt: 'SVG Downloader — Path & Integrity Inspector',
+        caption: 'XML syntactic validation with live SHA-256 checksum and vector path comparison',
+      },
+      {
+        type: 'video',
+        src: '',
+        alt: 'SVG Downloader — Export Pipeline Recording',
+        caption: 'Screen recording of asset discovery, variant inspection, and ZIP batch bundle generation',
+      },
+    ],
     detailedContent: {
       about: {
         en: 'Frontend developers frequently waste engineering time searching across scattered CDN repositories for brand and technology icons, only to discover inconsistent viewBox dimensions, mutated paths, or unverified licensing. SVG Downloader solves this by operating as a multi-source asset registry that unifies Simple Icons, Devicon, and Iconify into a single verified interface with cryptographic hash validation.',
@@ -129,6 +157,76 @@ export const projectsData: Project[] = [
           'Автоматическая валидация дерева SVG/XML с вычислением контрольной суммы SHA-256 в реальном времени.',
           'Сравнение вариантов: монохромные, светлые, темные и оригинальные векторные контуры.',
           'Экспорт для разработчиков: копирование сырого SVG, прямая загрузка и zip-архивы с манифестом.',
+        ],
+      },
+      interactionExperience: {
+        en: [
+          'Instant multi-source search querying official brand handles and technology keywords in real time.',
+          'Visual provenance inspector verifying original repository tags, maintainer attribution, and upstream releases.',
+          'Single-click raw SVG code copy, isolated vector inspection modal, and batch ZIP export with metadata manifest.',
+        ],
+        fr: [
+          'Recherche multi-sources instantanée interrogeant les identifiants officiels de marques en temps réel.',
+          'Inspecteur de provenance vérifiant les balises de dépôt d’origine et l’attribution des mainteneurs.',
+          'Copie du code SVG en un clic, inspection vectorielle isolée et exportation ZIP par lots avec manifeste.',
+        ],
+        ja: [
+          '公式ブランド名や技術キーワードをリアルタイムに横断照会する高速マルチソース検索。',
+          '元リポジトリタグ、メンテナ帰属、上流リリースを確認できる視覚的来歴インスペクター。',
+          'ワンクリックでの生SVGコードコピー、独立したベクター詳細モーダル、メタデータ付き一括ZIP書き出し。',
+        ],
+        de: [
+          'Echtzeit-Multi-Source-Suche über offizielle Markennamen und Technologieschlüsselwörter.',
+          'Visueller Provenienz-Inspektor zur Verifizierung von Original-Repository-Tags und Upstream-Releases.',
+          'Ein-Klick-SVG-Code-Kopieren, isolierte Vektor-Inspektion und Batch-ZIP-Export mit Manifest.',
+        ],
+        zh: [
+          '实时响应的多源检索管道，秒级跨库匹配官方品牌标识与技术栈关键字。',
+          '可视化溯源检视器，精确标定原始开源仓库标签、维护者署名与上游发布版本。',
+          '一键复制原生 SVG 代码、独立矢量视窗检验与包含元数据清单的批量工程 ZIP 打包。',
+        ],
+        ru: [
+          'Мгновенный мульти-источниковый поиск по официальным именам брендов и ключевым словам.',
+          'Визуальный инспектор происхождения с проверкой тегов оригинальных репозиториев.',
+          'Копирование исходного SVG в один клик, детальный просмотр и пакетный экспорт в ZIP.',
+        ],
+      },
+      technicalApproach: {
+        en: [
+          'Engineered with TypeScript and React with strict schema validation for vector assets.',
+          'Fast XML Parser verifies well-formed XML syntax without invoking browser DOM parser security overhead.',
+          'Web Crypto API calculates deterministic SHA-256 cryptographic hashes on in-memory buffers.',
+          'Client-side JSZip packaging packages selected vector files and JSON manifest without server-side compute.',
+        ],
+        fr: [
+          'Conçu avec TypeScript et React avec validation de schéma stricte pour les vecteurs.',
+          'Fast XML Parser vérifie la syntaxe XML sans le coût sécuritaire du parseur DOM.',
+          'L’API Web Crypto calcule des sommes SHA-256 déterministes sur des tampons en mémoire.',
+          'JSZip assemble les fichiers vectoriels sélectionnés et le manifeste JSON côté client.',
+        ],
+        ja: [
+          'TypeScriptとReactによる厳格なスキーマ検証を備えたアセットパイプライン。',
+          'Fast XML Parserにより、ブラウザDOMのセキュリティリスクを回避した高速構文解析を実行。',
+          'Web Crypto APIを用いて、インメモリバッファ上で決定論的SHA-256ハッシュを直接計算。',
+          'JSZipにより、サーバーを介さずクライアント側で完結するZIPアーカイブおよびJSONマニフェスト生成。',
+        ],
+        de: [
+          'Entwickelt mit TypeScript und React mit strikter Schemavalidierung für Vektor-Assets.',
+          'Fast XML Parser überprüft wohlgeformte XML-Syntax ohne DOM-Sicherheitsrisiken.',
+          'Web Crypto API berechnet deterministische SHA-256-Hashes direkt im Speicher.',
+          'Clientseitige JSZip-Generierung von ZIP-Archiven und JSON-Manifesten.',
+        ],
+        zh: [
+          '基于 TypeScript 与 React 构建，对矢量资产数据模型实施严格的类型化约束与防御式校验。',
+          '采用 Fast XML Parser 解析 SVG 语法抽象语法树，避免使用浏览器 DOMParser 的潜在安全隐患。',
+          '调用原生 Web Crypto API 在内存二进制缓冲区中计算确定性 SHA-256 密码学哈希。',
+          '纯前端基于 JSZip 构建选定矢量与结构化 JSON 清单的压缩归档，无须服务端算力介入。',
+        ],
+        ru: [
+          'Построен на TypeScript и React со строгой валидацией структуры данных.',
+          'Fast XML Parser проверяет синтаксис XML без уязвимостей стандартного DOMParser.',
+          'Web Crypto API вычисляет детерминированные хеши SHA-256 в оперативной памяти.',
+          'Клиентская архивация через JSZip формирует пакеты векторов и JSON-манифест.',
         ],
       },
       visuals: [],
@@ -242,6 +340,34 @@ export const projectsData: Project[] = [
     ],
     github: 'https://github.com/rockybuildingaiweb3-boop/rockyhomepage3D',
     demo: 'https://rockyhomepage3-d.vercel.app',
+    // Real Project Media presentation configuration
+    heroMedia: {
+      type: 'video',
+      src: '', // Awaiting real video/recording; renders high-end neutral specimen plate
+      poster: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1600&q=85',
+      alt: 'rockyhomepage3D — Spatial 3D Web Interface Capture',
+      caption: 'rockyhomepage3D: Screen recording of choreographed spatial navigation and real-time lighting',
+    },
+    galleryMedia: [
+      {
+        type: 'image',
+        src: '',
+        alt: 'rockyhomepage3D — Three.js Scene View',
+        caption: 'Three.js island geometry with custom shaders and dynamic point light tracking',
+      },
+      {
+        type: 'image',
+        src: '',
+        alt: 'rockyhomepage3D — Inertial Camera Choreography',
+        caption: 'Pointer-driven inertial camera rotation and depth parallax on discrete route viewpoints',
+      },
+      {
+        type: 'video',
+        src: '',
+        alt: 'rockyhomepage3D — Spatial Navigation Walkthrough',
+        caption: 'Screen recording of route transitions gliding between 3D spatial coordinates',
+      },
+    ],
     detailedContent: {
       about: {
         en: 'Web pages have traditionally been constrained by two-dimensional planes of text boxes and cards. rockyhomepage3D challenges this orthodoxy by creating a spatial landscape where geometry, lighting, and camera inertia transform page navigation into an architectural walkthrough across discrete conceptual islands.',
@@ -287,6 +413,76 @@ export const projectsData: Project[] = [
           'Хореография движения камеры с пружинной физикой для плавных переходов между маршрутами.',
           'Интерактивное вращение и параллакс глубины, реагирующие на координаты курсора мыши.',
           'Пространственный роутинг, связывающий веб-адреса (/, /about, /projects, /contact) с ракурсами камеры.',
+        ],
+      },
+      interactionExperience: {
+        en: [
+          'Pointer-driven rotation and depth parallax responsive to cursor coordinates and touch gestures.',
+          'Physics-based spring camera interpolation smoothly guiding the viewpoint across discrete 3D spatial stations.',
+          'Integrated audio synthesis triggering contextual frequencies as users approach geometric landmarks.',
+        ],
+        fr: [
+          'Rotation dirigée par le curseur et parallaxe réactive aux coordonnées de la souris et aux gestes tactiles.',
+          'Interpolation de caméra basée sur des ressorts guidant le point de vue entre différentes stations 3D.',
+          'Synthèse audio intégrée déclenchant des fréquences contextuelles à l’approche des repères géométriques.',
+        ],
+        ja: [
+          'カーソル座標やタッチジェスチャーに高感度に応答するポインタ駆動の回転と深度パララックス。',
+          '離散的な3D空間ステーション間を滑らかに結ぶ、物理演算に基づいたスプリングカメラ補間。',
+          '幾何学的ランドマークへの接近に応じて空間周波数を生成する統合オーディオ演出。',
+        ],
+        de: [
+          'Zeigergesteuerte Rotation und Tiefen-Parallaxe, die auf Mauskoordinaten und Touch-Gesten reagiert.',
+          'Physikbasierte Feder-Kamerainterpolation für sanfte Bewegungen zwischen 3D-Stationen.',
+          'Integrierte Audiosynthese mit kontextuellen Frequenzen bei Annäherung an geometrische Landmarken.',
+        ],
+        zh: [
+          '高度灵敏的指针驱动旋转与景深视差，细腻响应光标坐标位移与触控手势。',
+          '基于弹簧阻尼物理特性的摄像机平滑插值，自然牵引视点游历于不同三维景观站点之间。',
+          '集成微空间音效合成，随视点接近几何地标实时激发多维听觉反馈。',
+        ],
+        ru: [
+          'Вращение и параллакс глубины, реагирующие на перемещения курсора и касания.',
+          'Пружинная интерполяция камеры, плавно перемещающая ракурс между 3D-станциями.',
+          'Интегрированный синтез звука, реагирующий на приближение к геометрическим ориентирам.',
+        ],
+      },
+      technicalApproach: {
+        en: [
+          'Three.js and React Three Fiber rendering an interactive WebGL canvas at 60 frames per second.',
+          'Custom GLSL vertex and fragment shaders calculating realtime diffuse lighting and atmosphere.',
+          'React Spring Three driving camera vectors and focal rotations without blocking JavaScript thread execution.',
+          'React Router integration syncing browser history with 3D camera coordinates bidirectionally.',
+        ],
+        fr: [
+          'Three.js et React Three Fiber restituant un canevas WebGL interactif à 60 images par seconde.',
+          'Shaders de sommets et de fragments GLSL calculant l’éclairage diffus et l’atmosphère en temps réel.',
+          'React Spring Three guidant les vecteurs de caméra sans bloquer le thread JavaScript.',
+          'Intégration de React Router synchronisant l’historique du navigateur avec les coordonnées 3D.',
+        ],
+        ja: [
+          'Three.jsおよびReact Three Fiberによる60FPSの対話型WebGLキャンバスレンダリング。',
+          '拡散光と大気質感をリアルタイム算出するカスタムGLSL頂点およびフラグメントシェーダー。',
+          'JavaScriptメインスレッドを阻害せずにカメラベクトルを駆動するReact Spring Three。',
+          'ブラウザの履歴遷移と3D空間カメラ座標を双方向で同期するReact Router統合。',
+        ],
+        de: [
+          'Three.js und React Three Fiber rendern ein interaktives WebGL-Canvas mit 60 FPS.',
+          'Benutzerdefinierte GLSL-Shader berechnen Echtzeit-Beleuchtung und Atmosphäre.',
+          'React Spring Three steuert Kameravektoren ohne Blockieren des JavaScript-Threads.',
+          'React Router synchronisiert den Browser-Verlauf bidirektional mit 3D-Koordinaten.',
+        ],
+        zh: [
+          '基于 Three.js 与 React Three Fiber 构建，以每秒 60 帧稳定渲染高保真交互式 WebGL 画布。',
+          '定制 GLSL 顶点与片段着色器，实时计算漫反射环境光照与空间氛围衰减。',
+          '采用 React Spring Three 驱动三维摄像机运动向量，避免阻塞主事件循环执行。',
+          '深度整合 React Router，实现浏览器原生前进/后退历史与空间三维摄像机坐标的双向同步。',
+        ],
+        ru: [
+          'Three.js и React Three Fiber обеспечивают рендеринг WebGL со скоростью 60 кадров в секунду.',
+          'Кастомные шейдеры GLSL рассчитывают диффузное освещение и атмосферу сцены в реальном времени.',
+          'React Spring Three интерполирует векторы камеры без блокировки основного потока.',
+          'Синхронизация React Router связывает историю браузера с координатами камеры.',
         ],
       },
       visuals: [],
@@ -389,6 +585,34 @@ export const projectsData: Project[] = [
     },
     tools: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Motion', 'Google GenAI'],
     github: 'https://github.com/rockybuildingaiweb3-boop/melius-like',
+    // Real Project Media presentation configuration
+    heroMedia: {
+      type: 'image',
+      src: '', // Awaiting real screenshot/recording; renders high-end neutral specimen plate
+      poster: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1600&q=85',
+      alt: 'melius-like — Cylindrical 3D Perspective Model Carousel',
+      caption: 'melius-like: Production interface capture showing cylindrical model carousel and multi-modal filter taxonomy',
+    },
+    galleryMedia: [
+      {
+        type: 'image',
+        src: '',
+        alt: 'melius-like — Cylindrical Carousel Geometry',
+        caption: 'Cylindrical 3D matrix transformation arranging model cards across spatial radial angles',
+      },
+      {
+        type: 'image',
+        src: '',
+        alt: 'melius-like — Model Inspection Drawer',
+        caption: 'Detailed parameter specification drawer displaying token limits, benchmark ratings, and architecture specs',
+      },
+      {
+        type: 'video',
+        src: '',
+        alt: 'melius-like — Interactive Rotation Physics',
+        caption: 'Screen recording of swipe/drag inertia and realtime filtering across Video, Image, Audio, and Motion',
+      },
+    ],
     detailedContent: {
       about: {
         en: 'Generative AI tools frequently overwhelm creators with chaotic lists of disconnected models and parameters. melius-like investigates how radial and cylindrical layout geometries can structure model discovery, giving users intuitive spatial cues to compare capabilities across video, image, audio, and motion synthesis models.',
@@ -434,6 +658,76 @@ export const projectsData: Project[] = [
           'Мультимодальный каталог: Фильтрация в реальном времени по категориям Video, Image, Audio и Motion.',
           'Модальное окно инспекции модели: Полные спецификации параметров, длина контекста и индикаторы возможностей.',
           'Эргономика студии: Боковое меню и модальные окна авторизации для креативных рабочих процессов.',
+        ],
+      },
+      interactionExperience: {
+        en: [
+          'Radial drag and swipe rotation with inertia physics and boundary resistance.',
+          'One-click category filtering smoothly animating the active carousel radius between multimodal subsets.',
+          'Modal inspection drawer sliding into view with detailed specs, pricing tokens, and capability matrices.',
+        ],
+        fr: [
+          'Rotation radiale par glisser-déposer avec physique d’inertie et résistance aux limites.',
+          'Filtrage par catégorie en un clic animant le rayon actif du carrousel entre sous-ensembles multimodaux.',
+          'Tiroir d’inspection modal glissant avec spécifications détaillées et matrices de capacités.',
+        ],
+        ja: [
+          '慣性物理演算と境界抵抗を備えた放射状のドラッグ＆スワイプ回転。',
+          'マルチモーダルのサブセット間でカルーセル半径を滑らかに再計算するワンクリック分類フィルター。',
+          '詳細な仕様、トークン価格、機能マトリクスを表示するスライドイン型モデル精査ドロワー。',
+        ],
+        de: [
+          'Radiale Wisch- und Drag-Rotation mit Trägheitsphysik und Randwiderstand.',
+          'Ein-Klick-Kategoriefilterung mit weicher Animation des aktiven Karussell-Radius.',
+          'Modal-Inspektions-Drawer mit detaillierten Spezifikationen und Funktionsmatrizen.',
+        ],
+        zh: [
+          '具备惯性物理与阻尼回弹的径向鼠标拖拽与触控滑动旋转手势。',
+          '一键多模态分类筛选，动态平滑计算并重构激活状态下的三维圆柱半径与卡片间距。',
+          '侧向平滑呼出的模型深度检视抽屉，呈现参数规格、Token 消耗比与模态能力矩阵。',
+        ],
+        ru: [
+          'Радиальное перетаскивание и вращение с физикой инерции и сопротивлением границ.',
+          'Фильтрация категорий в один клик с плавной анимацией радиуса карусели.',
+          'Модальный инспектор с подробными спецификациями и матрицами возможностей.',
+        ],
+      },
+      technicalApproach: {
+        en: [
+          'CSS 3D transform matrices (perspective, rotateY, translateZ) generating a mathematically precise cylinder.',
+          'Motion animation springs driving velocity decay and snap-to-card rotation angles.',
+          'Declarative state management isolating carousel viewport calculations from document scroll.',
+          'TypeScript interfaces structuring model metadata across modalities without runtime overhead.',
+        ],
+        fr: [
+          'Matrices de transformation CSS 3D générant un cylindre mathématiquement précis.',
+          'Ressorts d’animation Motion gérant la décélération de vitesse et l’alignement des cartes.',
+          'Gestion d’état déclarative isolant les calculs du viewport du défilement du document.',
+          'Interfaces TypeScript structurant les métadonnées des modèles à travers les modalités.',
+        ],
+        ja: [
+          '数学的に正確な円柱空間を構築するCSS 3Dトランスフォーム行列（perspective, rotateY, translateZ）。',
+          '回転速度の減衰とカードへのスナップを制御するMotionアニメーションスプリング。',
+          'ドキュメントスクロールからカルーセル計算を分離する宣言型状態管理。',
+          '実行時オーバーヘッドなしに全模態のモデルメタデータを型付けするTypeScriptインターフェース。',
+        ],
+        de: [
+          'CSS 3D-Transformationsmatrizen für einen mathematisch exakten Zylinder.',
+          'Motion-Animationsfedern für Geschwindigkeitsabfall und Einrastwinkel.',
+          'Deklaratives State-Management isoliert Karussell-Berechnungen vom Scrollen.',
+          'TypeScript-Interfaces strukturieren Modellmetadaten über alle Modalitäten.',
+        ],
+        zh: [
+          '依托 CSS 3D 变换矩阵（perspective, rotateY, translateZ）实现几何精度严密的数学圆柱。',
+          '采用 Motion 动效弹簧驱动角速度衰减与卡片自动吸附（snap-to-card）。',
+          '声明式状态流将圆柱视口内的手势转动与全局页面滚动行为彻底解耦。',
+          '使用静态 TypeScript 接口严密建模跨模态参数，确保零运行时负载的纯净性能。',
+        ],
+        ru: [
+          'Матрицы CSS 3D (perspective, rotateY, translateZ) для построения точного цилиндра.',
+          'Пружинная анимация Motion управляет затуханием скорости и привязкой карточек.',
+          'Декларативное управление состоянием изолирует вращение карусели от прокрутки страницы.',
+          'Интерфейсы TypeScript структурируют метаданные моделей без накладных расходов.',
         ],
       },
       visuals: [],

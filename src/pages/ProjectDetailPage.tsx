@@ -7,6 +7,7 @@ import { WatercolorStain } from '../components/WatercolorStain';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
 import { EditorialBrowserFrame } from '../components/EditorialBrowserFrame';
+import { ProjectMediaFrame } from '../components/ProjectMediaFrame';
 import { MagneticLink } from '../components/MagneticLink';
 import { ProjectArchitectureDiagram } from '../components/ProjectArchitectureDiagram';
 
@@ -32,6 +33,12 @@ export const ProjectDetailPage: React.FC = () => {
     : '';
   const designPoints = project?.detailedContent.designApproach
     ? localizeArray(project.detailedContent.designApproach)
+    : [];
+  const interactionPoints = project?.detailedContent.interactionExperience
+    ? localizeArray(project.detailedContent.interactionExperience)
+    : [];
+  const technicalPoints = project?.detailedContent.technicalApproach
+    ? localizeArray(project.detailedContent.technicalApproach)
     : [];
 
   usePageMeta({
@@ -219,10 +226,10 @@ export const ProjectDetailPage: React.FC = () => {
         >
           <span className="flex items-center gap-2">
             <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>●</span>
-            <span>Interface Specimen: {project.previewUrl}</span>
+            <span>Production Media Presentation: {project.previewUrl}</span>
           </span>
           <span className={`font-['Caveat',cursive] font-sans text-base ${isDark ? 'text-violet-300' : 'text-[#8B5CF6]'}`}>
-            ~ authentic production architecture
+            ~ verified production architecture
           </span>
         </div>
       </section>
@@ -328,7 +335,7 @@ export const ProjectDetailPage: React.FC = () => {
             {/* Intent & Architecture */}
             <section className="space-y-4">
               <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
-                01 / intent & architecture
+                01 / intent & inquiry
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-light lowercase tracking-tight">
                 problem space & inquiry
@@ -363,7 +370,7 @@ export const ProjectDetailPage: React.FC = () => {
             {designPoints.length > 0 && (
               <section className="space-y-6">
                 <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
-                  02 / engineering & visual principles
+                  02 / architectural & design principles
                 </span>
                 <h2 className="font-serif text-3xl sm:text-4xl font-light lowercase tracking-tight">
                   architecture decisions
@@ -389,57 +396,137 @@ export const ProjectDetailPage: React.FC = () => {
               </section>
             )}
 
-            {/* 03 / System Architecture Diagram */}
-            <section className="space-y-4 pt-2">
-              <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
-                03 / system architecture & data flow
-              </span>
-              <ProjectArchitectureDiagram project={project} />
-            </section>
-
-            {/* 04 / Additional Visuals */}
-            {project.detailedContent.visuals.length > 0 && (
-              <section className="space-y-8 pt-4">
+            {/* Interaction Experience Points */}
+            {interactionPoints.length > 0 && (
+              <section className="space-y-6">
                 <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
-                  04 / interface documentation
+                  03 / interaction mechanics & user experience
                 </span>
                 <h2 className="font-serif text-3xl sm:text-4xl font-light lowercase tracking-tight">
-                  system views
+                  spatial & sensory dynamics
                 </h2>
 
-                <div className="space-y-8">
-                  {project.detailedContent.visuals.map((vis, vIdx) => (
-                    <figure key={vIdx} className="space-y-2">
-                      <div
-                        className={`overflow-hidden border rounded-xs ${
-                          isDark ? 'bg-[#0c0628] border-violet-950/60' : 'bg-[#ECEADE] border-[#E2DFD2]'
-                        }`}
-                      >
-                        <img
-                          src={vis.url}
-                          alt={localizeText(vis.caption)}
-                          loading="lazy"
-                          className={`w-full ${vis.aspect || 'aspect-[16/10]'} object-cover`}
-                        />
-                      </div>
-                      <figcaption className="flex items-baseline justify-between text-xs opacity-75 font-mono">
-                        <span>{localizeText(vis.caption)}</span>
-                        <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>view 0{vIdx + 2}</span>
-                      </figcaption>
-                    </figure>
+                <div className="space-y-4">
+                  {interactionPoints.map((point, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-start gap-4 pb-4 border-b ${
+                        isDark ? 'border-violet-950/40' : 'border-[#E2DFD2]/50'
+                      }`}
+                    >
+                      <span className={`font-mono text-sm font-semibold select-none pt-0.5 ${isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}`}>
+                        0{i + 1}.
+                      </span>
+                      <p className="text-[15px] opacity-75 font-sans leading-relaxed font-light">
+                        {point}
+                      </p>
+                    </div>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* 05 / Stack / Technologies */}
+            {/* Technical Execution Points */}
+            {technicalPoints.length > 0 && (
+              <section className="space-y-6">
+                <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
+                  04 / technical execution & performance
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl font-light lowercase tracking-tight">
+                  engineering specifications
+                </h2>
+
+                <div className="space-y-4">
+                  {technicalPoints.map((point, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-start gap-4 pb-4 border-b ${
+                        isDark ? 'border-violet-950/40' : 'border-[#E2DFD2]/50'
+                      }`}
+                    >
+                      <span className={`font-mono text-sm font-semibold select-none pt-0.5 ${isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}`}>
+                        0{i + 1}.
+                      </span>
+                      <p className="text-[15px] opacity-75 font-sans leading-relaxed font-light">
+                        {point}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* System Architecture Diagram */}
+            <section className="space-y-4 pt-2">
+              <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
+                05 / system architecture & data flow
+              </span>
+              <ProjectArchitectureDiagram project={project} />
+            </section>
+
+            {/* Gallery Media: Real Project Assets & Production Evidence */}
+            {((project.galleryMedia && project.galleryMedia.length > 0) || project.detailedContent.visuals.length > 0) && (
+              <section className="space-y-8 pt-4">
+                <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
+                  06 / media archive & production evidence
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl font-light lowercase tracking-tight">
+                  verified artifacts & captures
+                </h2>
+
+                <div className="space-y-8">
+                  {project.galleryMedia && project.galleryMedia.length > 0 ? (
+                    project.galleryMedia.map((mediaItem, mIdx) => (
+                      <div key={mIdx} className="space-y-2">
+                        <ProjectMediaFrame
+                          project={project}
+                          mediaItem={mediaItem}
+                          aspectRatio="aspect-[16/10]"
+                        />
+                        {mediaItem.caption && (
+                          <div className="flex items-baseline justify-between text-xs opacity-75 font-mono px-1">
+                            <span>{mediaItem.caption}</span>
+                            <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>
+                              plate 0{mIdx + 2}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    project.detailedContent.visuals.map((vis, vIdx) => (
+                      <figure key={vIdx} className="space-y-2">
+                        <div
+                          className={`overflow-hidden border rounded-xs ${
+                            isDark ? 'bg-[#0c0628] border-violet-950/60' : 'bg-[#ECEADE] border-[#E2DFD2]'
+                          }`}
+                        >
+                          <img
+                            src={vis.url}
+                            alt={localizeText(vis.caption)}
+                            loading="lazy"
+                            className={`w-full ${vis.aspect || 'aspect-[16/10]'} object-cover`}
+                          />
+                        </div>
+                        <figcaption className="flex items-baseline justify-between text-xs opacity-75 font-mono">
+                          <span>{localizeText(vis.caption)}</span>
+                          <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>view 0{vIdx + 2}</span>
+                        </figcaption>
+                      </figure>
+                    ))
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Stack / Technologies */}
             <section
               className={`pt-8 border-t space-y-4 ${
                 isDark ? 'border-violet-950/40' : 'border-[#E2DFD2]'
               }`}
             >
               <span className="text-[11px] uppercase tracking-[0.25em] font-mono block opacity-60">
-                05 / instruments & technologies
+                07 / instruments & technologies
               </span>
               <div className="flex flex-wrap gap-2 text-xs font-mono">
                 {project.tools.map((tool) => (
