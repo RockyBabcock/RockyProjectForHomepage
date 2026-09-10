@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { EditorialHero } from '../components/EditorialHero';
 import { CatalogueFilters } from '../components/CatalogueFilters';
@@ -15,6 +16,7 @@ interface CataloguePageProps {
 
 export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement }) => {
   const { t, localizeText } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   usePageMeta({
     title: `${t.hero.name} — ${t.hero.eyebrow}`,
@@ -22,9 +24,64 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
   });
 
   const archiveRef = useRef<HTMLDivElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('Featured');
+
+  // URL-driven filter parameters
+  const categoryParam = searchParams.get('category');
+  const sortParam = searchParams.get('sort');
+  const qParam = searchParams.get('q') || searchParams.get('search') || '';
+
+  const validCategories: ProjectCategory[] = ['All', 'AI', 'Web3', 'Open Source', 'Experiment', 'Design'];
+  const selectedCategory: ProjectCategory = (categoryParam && validCategories.includes(categoryParam as ProjectCategory))
+    ? (categoryParam as ProjectCategory)
+    : 'All';
+
+  const validSorts: Record<string, SortOption> = {
+    featured: 'Featured',
+    newest: 'Newest',
+    oldest: 'Oldest',
+  };
+  const sortBy: SortOption = (sortParam && validSorts[sortParam.toLowerCase()])
+    ? validSorts[sortParam.toLowerCase()]
+    : 'Featured';
+
+  const searchQuery = qParam;
+
+  const handleSelectCategory = (cat: ProjectCategory) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (cat === 'All') {
+        next.delete('category');
+      } else {
+        next.set('category', cat);
+      }
+      return next;
+    }, { replace: false });
+  };
+
+  const handleSortChange = (sort: SortOption) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (sort === 'Featured') {
+        next.delete('sort');
+      } else {
+        next.set('sort', sort.toLowerCase());
+      }
+      return next;
+    }, { replace: false });
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (!query.trim()) {
+        next.delete('q');
+        next.delete('search');
+      } else {
+        next.set('q', query);
+      }
+      return next;
+    }, { replace: true });
+  };
 
   const scrollToArchive = () => {
     archiveRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -95,11 +152,11 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
         {/* Quiet Filter, Search & Sort Bar */}
         <CatalogueFilters
           selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          onSelectCategory={handleSelectCategory}
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={handleSearchChange}
           sortBy={sortBy}
-          onSortChange={setSortBy}
+          onSortChange={handleSortChange}
           totalCount={projectsData.length}
           filteredCount={filteredProjects.length}
         />
@@ -134,8 +191,8 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
             </p>
             <button
               onClick={() => {
-                setSelectedCategory('All');
-                setSearchQuery('');
+                handleSelectCategory('All');
+                handleSearchChange('');
               }}
               className="mt-4 px-4 py-2 text-xs uppercase tracking-widest bg-[#171717] text-[#F5F4ED] hover:bg-[#6F87AA] transition-colors cursor-pointer"
             >

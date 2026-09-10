@@ -7,6 +7,7 @@ import { WatercolorStain } from '../components/WatercolorStain';
 import { useLanguage } from '../i18n/LanguageContext';
 import { EditorialBrowserFrame } from '../components/EditorialBrowserFrame';
 import { MagneticLink } from '../components/MagneticLink';
+import { ProjectArchitectureDiagram } from '../components/ProjectArchitectureDiagram';
 
 export const ProjectDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -329,11 +330,19 @@ export const ProjectDetailPage: React.FC = () => {
               </section>
             )}
 
-            {/* Additional Visuals */}
+            {/* 03 / System Architecture Diagram */}
+            <section className="space-y-4 pt-2">
+              <span className="text-[11px] uppercase tracking-[0.25em] text-[#67645C] font-mono block font-medium">
+                03 / system architecture & data flow
+              </span>
+              <ProjectArchitectureDiagram project={project} />
+            </section>
+
+            {/* 04 / Additional Visuals */}
             {project.detailedContent.visuals.length > 0 && (
               <section className="space-y-8 pt-4">
                 <span className="text-[11px] uppercase tracking-[0.25em] text-[#67645C] font-mono block font-medium">
-                  03 / interface documentation
+                  04 / interface documentation
                 </span>
                 <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#171717] lowercase tracking-tight">
                   system views
@@ -360,10 +369,10 @@ export const ProjectDetailPage: React.FC = () => {
               </section>
             )}
 
-            {/* Stack / Technologies */}
+            {/* 05 / Stack / Technologies */}
             <section className="pt-8 border-t border-[#E2DFD2] space-y-4">
               <span className="text-[11px] uppercase tracking-[0.25em] text-[#67645C] font-mono block font-medium">
-                04 / instruments & technologies
+                05 / instruments & technologies
               </span>
               <div className="flex flex-wrap gap-2 text-xs font-mono">
                 {project.tools.map((tool) => (

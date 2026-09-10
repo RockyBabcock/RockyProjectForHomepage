@@ -9,6 +9,7 @@ interface ProjectRailProps {
 export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
   const [activeNumber, setActiveNumber] = useState<string>(projects[0]?.number || '01');
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
+  const [isRailHovered, setIsRailHovered] = useState(false);
   const { localizeText } = useLanguage();
 
   useEffect(() => {
@@ -52,11 +53,16 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
   return (
     <aside
       aria-label="Project Archive Navigator"
-      className="hidden xl:flex fixed right-5 2xl:right-8 top-1/2 -translate-y-1/2 z-35 flex-col items-end gap-3 select-none pointer-events-auto"
+      onMouseEnter={() => setIsRailHovered(true)}
+      onMouseLeave={() => {
+        setIsRailHovered(false);
+        setHoveredProject(null);
+      }}
+      className="hidden xl:flex fixed right-4 2xl:right-8 top-1/2 -translate-y-1/2 z-35 flex-col items-end gap-3 select-none pointer-events-auto"
     >
       {/* Editorial Progress Indicator: e.g. "02 / 08" */}
-      <div className="flex flex-col items-end pb-2 pr-1 border-b border-[#E2DFD2]">
-        <span className="text-[9px] uppercase font-mono tracking-[0.24em] text-[#9E9A90]">
+      <div className="flex flex-col items-end pb-2 pr-1 border-b border-[#E2DFD2] transition-colors duration-200">
+        <span className="text-[10px] uppercase font-mono tracking-[0.24em] text-[#9E9A90]">
           navigator
         </span>
         <span className="font-mono text-[12px] font-medium text-[#171717]">
@@ -65,7 +71,7 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
       </div>
 
       {/* Nav List */}
-      <nav className="flex flex-col items-end gap-2">
+      <nav className="flex flex-col items-end gap-1.5 p-2 bg-[#F5F4ED]/80 backdrop-blur-xs border border-[#E2DFD2]/60 rounded-xs transition-all duration-300">
         {projects.map((p) => {
           const isActive = activeNumber === p.number;
           const localizedTitle = localizeText(p.title);
@@ -80,7 +86,7 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
               {/* Rich Hover Preview Card */}
               {hoveredProject?.number === p.number && (
                 <div
-                  className="absolute right-12 top-1/2 -translate-y-1/2 w-48 p-2.5 bg-[#F5F4ED] border border-[#C4BFB0] shadow-[0_8px_24px_rgba(23,23,23,0.08)] pointer-events-none z-50 text-left space-y-1.5 animate-in fade-in zoom-in-95 duration-150"
+                  className="absolute right-full mr-3 top-1/2 -translate-y-1/2 w-52 p-2.5 bg-[#FAF9F5] border border-[#171717] shadow-[0_8px_24px_rgba(23,23,23,0.12)] pointer-events-none z-50 text-left space-y-2 animate-in fade-in zoom-in-95 duration-150"
                   aria-hidden="true"
                 >
                   {/* Miniature Browser Preview */}
@@ -90,7 +96,7 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
                       alt=""
                       className="w-full h-full object-cover object-top"
                     />
-                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#171717]/85 text-[9px] font-mono text-[#F5F4ED] uppercase">
+                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#171717] text-[9px] font-mono text-[#F5F4ED] uppercase tracking-wider">
                       {p.type}
                     </div>
                   </div>
@@ -99,19 +105,33 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
                     <div className="font-serif text-[13px] font-medium text-[#171717] line-clamp-1 leading-tight">
                       {localizedTitle}
                     </div>
-                    <div className="text-[10px] font-mono text-[#67645C] truncate">
-                      {p.previewUrl}
+                    <div className="text-[10px] font-mono text-[#6F87AA] truncate">
+                      {p.slug} · {p.year}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Number Trigger Button */}
+              {/* Number Trigger Button with Expandable Details */}
               <button
                 onClick={() => scrollToProject(p.number)}
-                className="group flex items-center gap-2 py-0.5 cursor-pointer text-right focus:outline-none"
+                className={`group flex items-center gap-2.5 py-1 px-1.5 rounded-xs transition-all duration-200 cursor-pointer text-right focus:outline-none ${
+                  isActive ? 'bg-[#ECEADE]' : 'hover:bg-[#ECEADE]/60'
+                }`}
                 aria-label={`Jump to project ${p.number}: ${localizedTitle}`}
               >
+                {/* Expanded text when rail is hovered */}
+                {isRailHovered && (
+                  <div className="flex items-center gap-2 pr-1 font-mono text-[11px] animate-in fade-in slide-in-from-right-2 duration-150">
+                    <span className="text-[#171717] font-medium max-w-[110px] truncate">
+                      {p.slug}
+                    </span>
+                    <span className="text-[9px] px-1 py-0.2 bg-[#171717]/10 text-[#67645C] uppercase">
+                      {p.type}
+                    </span>
+                  </div>
+                )}
+
                 {/* Number indicator */}
                 <span
                   className={`font-mono text-[11px] transition-colors duration-200 ${
@@ -127,8 +147,8 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
                 <span
                   className={`h-[1.5px] transition-all duration-300 ${
                     isActive
-                      ? 'w-5 bg-[#6F87AA]'
-                      : 'w-2 bg-[#E2DFD2] group-hover:w-3.5 group-hover:bg-[#9E9A90]'
+                      ? 'w-4 bg-[#6F87AA]'
+                      : 'w-2 bg-[#E2DFD2] group-hover:w-3 group-hover:bg-[#9E9A90]'
                   }`}
                 />
               </button>
