@@ -7,44 +7,40 @@ export const TechnicalIndex: React.FC = () => {
 
   const categories = [
     {
-      category: 'FRONTEND & WORKBENCH',
+      category: 'FRONTEND',
       tools: [
-        { name: 'React 18+', role: 'Component architecture, concurrent rendering, custom hooks' },
+        { name: 'React 19 / 18+', role: 'Component architecture, concurrent rendering, custom hooks' },
         { name: 'TypeScript', role: 'Strict typing, AST transformations, type safety' },
         { name: 'Vite / Rollup', role: 'High-speed bundling, ESM modules, asset pipelines' },
         { name: 'Tailwind CSS', role: 'Utility design systems, dynamic theme variables' },
-        { name: 'Framer Motion', role: 'Kinetics, layout animations, shared transitions' },
-        { name: 'WebGL2 / Canvas', role: 'Custom shaders, particle simulations, hardware raster' },
+        { name: 'Motion', role: 'Kinetics, layout animations, shared transitions' },
       ],
     },
     {
-      category: 'AI AGENTS & RUNTIMES',
+      category: '3D & SPATIAL',
       tools: [
-        { name: 'Claude (Anthropic)', role: 'Multi-step reasoning, tool execution, system prompting' },
-        { name: 'OpenAI API', role: 'Structured JSON output, embeddings, semantic routing' },
-        { name: 'Agent DAGs', role: 'Directed acyclic graph orchestration, subagent handoffs' },
-        { name: 'Tool Calling & RAG', role: 'Sandboxed code tools, vector retrieval, reranking' },
-        { name: 'Local Evaluation', role: 'Deterministic validation loops, rubric scoring' },
-      ],
-    },
-    {
-      category: 'SPATIAL & GRAPHICS',
-      tools: [
-        { name: 'Three.js & WebGL2', role: 'Scene graph orchestration, geometry buffers, procedural materials' },
+        { name: 'Three.js & WebGL', role: 'Scene graph orchestration, geometry buffers, procedural materials' },
         { name: 'React Three Fiber', role: 'Declarative 3D components, spring camera physics, Drei helpers' },
-        { name: 'GLSL Shaders', role: 'Custom vertex displacement, fragment coloring, specular highlights' },
+        { name: 'Custom Vector Engine', role: '2D canvas 3D projection, 60fps fallback rendering without WebGL' },
         { name: 'Spatial Routing', role: 'Mapping URL routes to 3D camera viewpoints and focal coordinates' },
-        { name: 'Performance Budget', role: 'Draw call batching, memory disposal, sub-pixel canvas scaling' },
       ],
     },
     {
-      category: 'DESIGN & CREATIVE CODE',
+      category: 'AI & MULTI-MODAL',
       tools: [
-        { name: 'Variable Typography', role: 'Dynamic font axis interpolation, optical sizing' },
-        { name: 'Mathematical Grid Math', role: 'Asymmetric rhythm, proportional ratio scales' },
-        { name: 'Web Audio API', role: 'Procedural synthesis, interactive sonic feedback' },
-        { name: 'Figma Systems', role: 'Token architectures, interaction prototyping' },
-        { name: 'Creative Coding', role: 'Noise algorithms, generative palettes, fluid math' },
+        { name: 'Multi-Modal Pipelines', role: 'Video, image, audio, and motion generative model orchestration' },
+        { name: 'Google GenAI SDK', role: 'Structured output, semantic categorization, embeddings' },
+        { name: 'Cylindrical 3D Carousel', role: 'Radial perspective projection, model card inspection drawers' },
+        { name: 'Tool Calling & Evaluation', role: 'Deterministic validation loops, sandboxed code execution' },
+      ],
+    },
+    {
+      category: 'TOOLS & RUNTIMES',
+      tools: [
+        { name: 'SVG / XML Validation', role: 'Fast XML parsing, SHA-256 integrity verification, asset registry' },
+        { name: 'Node.js & Express', role: 'Server-side API routes, secure proxying, asset compression' },
+        { name: 'JSZip & Archiving', role: 'In-browser engineering export bundles and manifest packaging' },
+        { name: 'Git & Open Source', role: 'Clean commits, modular architectures, continuous deployment' },
       ],
     },
   ];
@@ -65,7 +61,7 @@ export const TechnicalIndex: React.FC = () => {
                 isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
               }`}
             >
-              [ 04 / SYSTEM CAPABILITIES ]
+              [ TECHNICAL INDEX ]
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
               technical index<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>

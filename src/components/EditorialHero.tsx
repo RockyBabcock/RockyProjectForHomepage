@@ -93,7 +93,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
                   }`}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  SYSTEMS ONLINE
+                  3 PRODUCTION SYSTEMS
                 </span>
               </div>
 
@@ -179,7 +179,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
                     isDark ? 'text-violet-300 hover:text-violet-100' : 'text-[#171717] hover:text-[#8B5CF6]'
                   }`}
                 >
-                  <span>open folio</span>
+                  <span>view project</span>
                   <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               </div>

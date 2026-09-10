@@ -81,6 +81,7 @@ export interface Project {
   aspectRatio?: string;
   pigmentAccent: 'cool' | 'warm' | 'blue-grey' | 'ochre' | 'muted-olive';
   visualMode?: VisualArtifactMode;
+  artifactMode?: 'registry' | 'spatial' | 'ai-canvas' | 'browser' | 'terminal' | 'diagram' | 'image' | 'mixed';
   watercolorVariant?: WatercolorVariant;
   watercolorIntensity?: WatercolorIntensity;
   layoutVariant?: LayoutVariant;

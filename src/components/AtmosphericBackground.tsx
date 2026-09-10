@@ -80,7 +80,7 @@ export const AtmosphericBackground: React.FC = () => {
         />
       )}
 
-      {/* Layer 4: Organic Marginal Fluidity (Subtle Watercolor Bleeds) */}
+      {/* Layer 4: Organic Marginal Fluidity (Subtle Watercolor Bleeds into document margins) */}
       <div
         className={`absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
           isDark ? 'bg-purple-950/20' : 'bg-[#6F87AA]/10'
@@ -91,22 +91,11 @@ export const AtmosphericBackground: React.FC = () => {
           isDark ? 'bg-indigo-950/25' : 'bg-[#BC9A64]/10'
         }`}
       />
-
-      {/* Layer 5: Extremely Subtle Technical Calibration Texture (Corner Tick Marks & Studio Coordinates) */}
       <div
-        className={`absolute top-3 left-4 text-[10px] font-mono tracking-[0.22em] transition-colors duration-500 hidden sm:block ${
-          isDark ? 'text-violet-400/25' : 'text-[#171717]/20'
+        className={`absolute -bottom-24 left-1/3 w-88 h-88 rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
+          isDark ? 'bg-violet-950/20' : 'bg-[#A78BFA]/10'
         }`}
-      >
-        + 42.3601° N · 71.0589° W [ROCKY/LAB]
-      </div>
-      <div
-        className={`absolute top-3 right-4 text-[10px] font-mono tracking-[0.22em] transition-colors duration-500 hidden sm:block ${
-          isDark ? 'text-violet-400/25' : 'text-[#171717]/20'
-        }`}
-      >
-        SYS.STATE: OPTIMAL +
-      </div>
+      />
 
       {/* Hairline Boundary Rules */}
       <div
