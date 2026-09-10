@@ -37,6 +37,27 @@ export interface ProjectDetailedContent {
 
 export type LayoutVariant = 'lead-7' | 'offset-5' | 'cinema-12' | 'standard-6' | 'offset-6';
 
+export type VisualArtifactMode =
+  | 'browser'
+  | 'interface'
+  | 'terminal'
+  | 'agent-graph'
+  | 'dashboard'
+  | 'workflow'
+  | 'typographic'
+  | 'image'
+  | 'mixed';
+
+export type WatercolorVariant =
+  | 'cool'
+  | 'warm'
+  | 'blue-grey'
+  | 'muted-olive'
+  | 'mixed'
+  | 'ochre';
+
+export type WatercolorIntensity = 'subtle' | 'medium' | 'deep';
+
 export interface Project {
   slug: string;
   number: string;
@@ -60,6 +81,9 @@ export interface Project {
   colSpanDesktop?: string;
   aspectRatio?: string;
   pigmentAccent: 'cool' | 'warm' | 'blue-grey' | 'ochre' | 'muted-olive';
+  visualMode?: VisualArtifactMode;
+  watercolorVariant?: WatercolorVariant;
+  watercolorIntensity?: WatercolorIntensity;
   layoutVariant?: LayoutVariant;
   handwrittenNote?: MultilingualText;
   offsetMargin?: string;

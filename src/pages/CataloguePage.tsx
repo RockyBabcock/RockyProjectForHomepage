@@ -2,13 +2,17 @@ import React, { useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { EditorialHero } from '../components/EditorialHero';
+import { TypographicMarquee } from '../components/TypographicMarquee';
+import { StudioStatusSection } from '../components/StudioStatusSection';
 import { CatalogueFilters } from '../components/CatalogueFilters';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectRail } from '../components/ProjectRail';
+import { TechnicalIndex } from '../components/TechnicalIndex';
 import { projectsData, getDynamicLayout } from '../data/projects';
-import { ProjectCategory, SortOption } from '../types';
+import { ProjectCategory, SortOption, Project } from '../types';
 import { WatercolorStain } from '../components/WatercolorStain';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useSurfaceMode } from '../context/SurfaceModeContext';
 
 interface CataloguePageProps {
   onOpenStatement: () => void;
@@ -16,14 +20,17 @@ interface CataloguePageProps {
 
 export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement }) => {
   const { t, localizeText } = useLanguage();
+  const { mode } = useSurfaceMode();
+  const isDark = mode === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
 
   usePageMeta({
-    title: `${t.hero.name} — ${t.hero.eyebrow}`,
-    description: t.hero.statement,
+    title: `Rocky Babcock — Creative Technology & Projects`,
+    description: 'Cinematic creative technology portfolio for Rocky Babcock — AI agents, Web3 systems, developer tools, and experimental interfaces.',
   });
 
   const archiveRef = useRef<HTMLDivElement>(null);
+  const selectedWorkRef = useRef<HTMLDivElement>(null);
 
   // URL-driven filter parameters
   const categoryParam = searchParams.get('category');
@@ -84,10 +91,15 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
   };
 
   const scrollToArchive = () => {
-    archiveRef.current?.scrollIntoView({ behavior: 'smooth' });
+    selectedWorkRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Filter & Sort logic supporting multilingual fields and scalable array lengths
+  // Top 3–4 Flagship Projects for "Selected Work" section
+  const selectedProjects = useMemo(() => {
+    return projectsData.slice(0, 4);
+  }, []);
+
+  // Filter & Sort logic supporting multilingual fields
   const filteredProjects = useMemo(() => {
     let result = [...projectsData];
 
@@ -132,24 +144,109 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
     return result;
   }, [selectedCategory, searchQuery, sortBy, localizeText]);
 
+  // Group Archive projects by year for time-aware structure (instruction 18)
+  const groupedByYear = useMemo(() => {
+    const groups: Record<string, Project[]> = {};
+    filteredProjects.forEach((project) => {
+      const yr = project.year || '2025';
+      if (!groups[yr]) {
+        groups[yr] = [];
+      }
+      groups[yr].push(project);
+    });
+
+    // Sort years descending
+    const sortedYears = Object.keys(groups).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+    return sortedYears.map((year) => ({
+      year,
+      projects: groups[year],
+    }));
+  }, [filteredProjects]);
+
   return (
-    <div className="w-full relative">
-      {/* 1. Asymmetric Editorial Hero with Physical Specimen Artifact */}
+    <div className="w-full relative transition-colors duration-300">
+      {/* 1. OPENING: Editorial Hero with Featured Project Window */}
       <EditorialHero
         onScrollToArchive={scrollToArchive}
         onOpenStatement={onOpenStatement}
       />
 
-      {/* Vertical Archival Progress Rail for Desktop */}
-      <ProjectRail projects={filteredProjects} />
+      {/* 2. SLOW TYPOGRAPHIC MARQUEE: Ambient motion connecting to homepage */}
+      <TypographicMarquee />
 
-      {/* 2. Main Project Archive — Content Driven & Fully Scalable */}
-      <main
+      {/* Vertical Archival Timeline Navigator for Desktop */}
+      <ProjectRail projects={projectsData} />
+
+      {/* 3. SELECTED WORK: Expansive Exhibition Pieces (Mixed Cinema, 7/5 Asymmetry) */}
+      <section
+        id="selected-work"
+        ref={selectedWorkRef}
+        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-14 sm:pt-20 pb-16"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-8 border-b border-current/10">
+          <div className="space-y-1">
+            <span
+              className={`text-[11px] font-mono uppercase tracking-[0.24em] ${
+                isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
+              }`}
+            >
+              [ 01 / SELECTED WORK ]
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
+              flagship systems<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+            </h2>
+          </div>
+          <p className="text-xs font-mono opacity-60 uppercase tracking-widest max-w-xs sm:text-right">
+            Curated exhibition pieces with live interactive specimens & architectures
+          </p>
+        </div>
+
+        {/* Selected Projects Exhibition Flow */}
+        <div className="space-y-2 sm:space-y-4">
+          {selectedProjects.map((project, idx) => {
+            const layout = getDynamicLayout(project, idx, selectedProjects.length);
+            return (
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                priority={idx < 2}
+                computedColSpan={layout.colSpanDesktop}
+                computedOffset={layout.offsetMargin}
+                computedAspectRatio={layout.aspectRatio}
+              />
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 4. CURRENTLY BUILDING: Studio Pulse & Real Active Focus */}
+      <StudioStatusSection />
+
+      {/* 5. PROJECT ARCHIVE: Time-Aware Year-Grouped Architecture */}
+      <section
         id="catalogue-archive"
         ref={archiveRef}
-        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12"
+        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-24 pb-20"
       >
-        {/* Quiet Filter, Search & Sort Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-6 border-b border-current/10">
+          <div className="space-y-1">
+            <span
+              className={`text-[11px] font-mono uppercase tracking-[0.24em] ${
+                isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
+              }`}
+            >
+              [ 03 / PROJECT ARCHIVE ]
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
+              complete index<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+            </h2>
+          </div>
+          <p className="text-xs font-mono opacity-60 uppercase tracking-widest max-w-xs sm:text-right">
+            Chronological repository of software systems, tools, and creative code
+          </p>
+        </div>
+
+        {/* Filter, Search & Sort Bar */}
         <CatalogueFilters
           selectedCategory={selectedCategory}
           onSelectCategory={handleSelectCategory}
@@ -161,32 +258,50 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
           filteredCount={filteredProjects.length}
         />
 
-        {/* 3. Scalable Asymmetric Editorial Grid (supports 3, 6, 8, 12, 24+ projects dynamically) */}
+        {/* Time-Aware Grouped Layout: Years as structural layout elements */}
         {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-12 sm:gap-y-16 pt-6 pb-20">
-            {filteredProjects.map((project, idx) => {
-              const layout = getDynamicLayout(project, idx, filteredProjects.length);
-              return (
-                <ProjectCard
-                  key={project.slug}
-                  project={project}
-                  priority={idx < 2}
-                  computedColSpan={layout.colSpanDesktop}
-                  computedOffset={layout.offsetMargin}
-                  computedAspectRatio={layout.aspectRatio}
-                />
-              );
-            })}
+          <div className="space-y-16 pt-8">
+            {groupedByYear.map(({ year, projects }) => (
+              <div key={year} className="space-y-6">
+                {/* Year Header Marker */}
+                <div className="flex items-center gap-4 pt-4 border-b border-current/10">
+                  <span className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light opacity-30 select-none">
+                    {year}
+                  </span>
+                  <div className="h-px flex-1 bg-current/10" />
+                  <span className="font-mono text-xs opacity-50 uppercase tracking-wider">
+                    {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+                  </span>
+                </div>
+
+                {/* Grid for this year */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-12 sm:gap-y-16">
+                  {projects.map((project, idx) => {
+                    const layout = getDynamicLayout(project, idx, projects.length);
+                    return (
+                      <ProjectCard
+                        key={project.slug}
+                        project={project}
+                        priority={false}
+                        computedColSpan={layout.colSpanDesktop}
+                        computedOffset={layout.offsetMargin}
+                        computedAspectRatio={layout.aspectRatio}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="py-24 text-center space-y-4 max-w-md mx-auto">
             <div className="w-48 h-20 mx-auto opacity-50">
-              <WatercolorStain variant="subtle-stain" palette="cool" />
+              <WatercolorStain variant="subtle-stain" palette={isDark ? 'grey' : 'cool'} />
             </div>
-            <p className="font-serif text-2xl font-light text-[#171717] lowercase">
+            <p className="font-serif text-2xl font-light lowercase">
               {t.filters.noProjectsFound}
             </p>
-            <p className="text-sm text-[#67645C] font-sans leading-relaxed">
+            <p className="text-sm opacity-70 font-sans leading-relaxed font-light">
               {t.filters.noProjectsDesc}
             </p>
             <button
@@ -194,23 +309,20 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
                 handleSelectCategory('All');
                 handleSearchChange('');
               }}
-              className="mt-4 px-4 py-2 text-xs uppercase tracking-widest bg-[#171717] text-[#F5F4ED] hover:bg-[#6F87AA] transition-colors cursor-pointer"
+              className={`mt-4 px-4 py-2 text-xs uppercase tracking-widest font-mono transition-colors cursor-pointer ${
+                isDark
+                  ? 'bg-violet-600 text-[#030014] hover:bg-violet-400 font-semibold'
+                  : 'bg-[#171717] text-[#F5F4ED] hover:bg-[#8B5CF6]'
+              }`}
             >
               {t.filters.resetFilters}
             </button>
           </div>
         )}
+      </section>
 
-        {/* Quiet mid-section watercolor divider */}
-        <div className="py-8 flex justify-center">
-          <WatercolorStain
-            variant="divider-flow"
-            palette="cool"
-            className="w-full max-w-xl"
-            opacity={0.4}
-          />
-        </div>
-      </main>
+      {/* 6. TECHNICAL INDEX: Frontend, AI, Web3, Creative Code */}
+      <TechnicalIndex />
     </div>
   );
 };

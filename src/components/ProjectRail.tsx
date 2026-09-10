@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Project } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useSurfaceMode } from '../context/SurfaceModeContext';
 
 interface ProjectRailProps {
   projects: Project[];
@@ -9,8 +10,9 @@ interface ProjectRailProps {
 export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
   const [activeNumber, setActiveNumber] = useState<string>(projects[0]?.number || '01');
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
-  const [isRailHovered, setIsRailHovered] = useState(false);
   const { localizeText } = useLanguage();
+  const { mode } = useSurfaceMode();
+  const isDark = mode === 'dark';
 
   useEffect(() => {
     const observerCallback: IntersectionObserverCallback = (entries) => {
@@ -53,25 +55,32 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
   return (
     <aside
       aria-label="Project Archive Navigator"
-      onMouseEnter={() => setIsRailHovered(true)}
-      onMouseLeave={() => {
-        setIsRailHovered(false);
-        setHoveredProject(null);
-      }}
+      onMouseLeave={() => setHoveredProject(null)}
       className="hidden xl:flex fixed right-4 2xl:right-8 top-1/2 -translate-y-1/2 z-35 flex-col items-end gap-3 select-none pointer-events-auto"
     >
       {/* Editorial Progress Indicator: e.g. "02 / 08" */}
-      <div className="flex flex-col items-end pb-2 pr-1 border-b border-[#E2DFD2] transition-colors duration-200">
-        <span className="text-[10px] uppercase font-mono tracking-[0.24em] text-[#9E9A90]">
-          navigator
+      <div
+        className={`flex flex-col items-end pb-2 pr-1 border-b transition-colors duration-200 ${
+          isDark ? 'border-violet-950/40 text-violet-300' : 'border-[#E2DFD2] text-[#171717]'
+        }`}
+      >
+        <span className="text-[10px] uppercase font-mono tracking-[0.24em] opacity-50">
+          timeline
         </span>
-        <span className="font-mono text-[12px] font-medium text-[#171717]">
-          {activeNumber} <span className="text-[#9E9A90] font-normal">/ {totalCountFormatted}</span>
+        <span className="font-mono text-[13px] font-semibold tracking-wider">
+          <span className={isDark ? 'text-[#A78BFA]' : 'text-[#8B5CF6]'}>{activeNumber}</span>{' '}
+          <span className="opacity-40 font-normal">/ {totalCountFormatted}</span>
         </span>
       </div>
 
       {/* Nav List */}
-      <nav className="flex flex-col items-end gap-1.5 p-2 bg-[#F5F4ED]/80 backdrop-blur-xs border border-[#E2DFD2]/60 rounded-xs transition-all duration-300">
+      <nav
+        className={`flex flex-col items-end gap-2 p-2.5 backdrop-blur-md border rounded-xs transition-all duration-300 ${
+          isDark
+            ? 'bg-[#0a0520]/85 border-violet-950/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+            : 'bg-[#FAF9F5]/90 border-[#E2DFD2] shadow-[0_4px_20px_rgba(23,23,23,0.04)]'
+        }`}
+      >
         {projects.map((p) => {
           const isActive = activeNumber === p.number;
           const localizedTitle = localizeText(p.title);
@@ -86,69 +95,74 @@ export const ProjectRail: React.FC<ProjectRailProps> = ({ projects }) => {
               {/* Rich Hover Preview Card */}
               {hoveredProject?.number === p.number && (
                 <div
-                  className="absolute right-full mr-3 top-1/2 -translate-y-1/2 w-52 p-2.5 bg-[#FAF9F5] border border-[#171717] shadow-[0_8px_24px_rgba(23,23,23,0.12)] pointer-events-none z-50 text-left space-y-2 animate-in fade-in zoom-in-95 duration-150"
+                  className={`absolute right-full mr-3 top-1/2 -translate-y-1/2 w-56 p-2.5 border shadow-xl pointer-events-none z-50 text-left space-y-2 animate-in fade-in zoom-in-95 duration-150 ${
+                    isDark
+                      ? 'bg-[#0f092e] border-violet-700/50 text-[#F5F3EF]'
+                      : 'bg-[#FAF9F5] border-[#171717] text-[#171717]'
+                  }`}
                   aria-hidden="true"
                 >
-                  {/* Miniature Browser Preview */}
-                  <div className="relative w-full h-24 overflow-hidden border border-[#E2DFD2] bg-[#ECEADE]">
+                  {/* Miniature Preview */}
+                  <div className="relative w-full h-24 overflow-hidden border border-current/15 bg-current/5">
                     <img
                       src={p.cover}
                       alt=""
                       className="w-full h-full object-cover object-top"
                     />
-                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#171717] text-[9px] font-mono text-[#F5F4ED] uppercase tracking-wider">
+                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#8B5CF6] text-[9px] font-mono text-white uppercase tracking-wider">
                       {p.type}
                     </div>
                   </div>
 
                   <div>
-                    <div className="font-serif text-[13px] font-medium text-[#171717] line-clamp-1 leading-tight">
+                    <div className="font-serif text-[13px] font-medium line-clamp-1 leading-tight text-current">
                       {localizedTitle}
                     </div>
-                    <div className="text-[10px] font-mono text-[#6F87AA] truncate">
+                    <div className="text-[10px] font-mono opacity-65 truncate">
                       {p.slug} · {p.year}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Number Trigger Button with Expandable Details */}
+              {/* Number Pill / Indicator */}
               <button
                 onClick={() => scrollToProject(p.number)}
-                className={`group flex items-center gap-2.5 py-1 px-1.5 rounded-xs transition-all duration-200 cursor-pointer text-right focus:outline-none ${
-                  isActive ? 'bg-[#ECEADE]' : 'hover:bg-[#ECEADE]/60'
+                className={`group flex items-center gap-2 px-2 py-0.5 rounded-xs transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'font-bold'
+                    : 'opacity-50 hover:opacity-100'
                 }`}
-                aria-label={`Jump to project ${p.number}: ${localizedTitle}`}
+                title={`${p.number} — ${localizedTitle}`}
               >
-                {/* Expanded text when rail is hovered */}
-                {isRailHovered && (
-                  <div className="flex items-center gap-2 pr-1 font-mono text-[11px] animate-in fade-in slide-in-from-right-2 duration-150">
-                    <span className="text-[#171717] font-medium max-w-[110px] truncate">
-                      {p.slug}
-                    </span>
-                    <span className="text-[9px] px-1 py-0.2 bg-[#171717]/10 text-[#67645C] uppercase">
-                      {p.type}
-                    </span>
-                  </div>
-                )}
-
-                {/* Number indicator */}
                 <span
-                  className={`font-mono text-[11px] transition-colors duration-200 ${
+                  className={`text-[10px] font-mono uppercase tracking-widest hidden group-hover:inline-block max-w-[85px] truncate transition-colors ${
+                    isDark ? 'text-violet-300' : 'text-[#67645C]'
+                  }`}
+                >
+                  {p.slug}
+                </span>
+
+                <span
+                  className={`font-mono text-[12px] transition-transform duration-200 ${
                     isActive
-                      ? 'text-[#171717] font-semibold'
-                      : 'text-[#9E9A90] group-hover:text-[#171717]'
+                      ? isDark
+                        ? 'text-[#A78BFA] scale-110 font-bold'
+                        : 'text-[#8B5CF6] scale-110 font-bold'
+                      : 'text-current'
                   }`}
                 >
                   {p.number}
                 </span>
 
-                {/* Minimal tick indicator */}
+                {/* Minimal line indicator */}
                 <span
-                  className={`h-[1.5px] transition-all duration-300 ${
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
                     isActive
-                      ? 'w-4 bg-[#6F87AA]'
-                      : 'w-2 bg-[#E2DFD2] group-hover:w-3 group-hover:bg-[#9E9A90]'
+                      ? isDark
+                        ? 'w-4 bg-[#A78BFA]'
+                        : 'w-4 bg-[#8B5CF6]'
+                      : 'w-1.5 bg-current/25 group-hover:bg-current/60'
                   }`}
                 />
               </button>

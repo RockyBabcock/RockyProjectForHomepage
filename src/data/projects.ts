@@ -45,6 +45,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-12',
     aspectRatio: 'aspect-[21/9]',
     pigmentAccent: 'cool',
+    visualMode: 'agent-graph',
+    watercolorVariant: 'cool',
+    watercolorIntensity: 'medium',
     layoutVariant: 'cinema-12',
     previewUrl: 'synapse.agent.ai/workbench',
     handwrittenNote: {
@@ -204,6 +207,9 @@ export const projectsData: Project[] = [
     aspectRatio: 'aspect-[4/5]',
     offsetMargin: 'lg:mt-8',
     pigmentAccent: 'warm',
+    visualMode: 'interface',
+    watercolorVariant: 'warm',
+    watercolorIntensity: 'deep',
     layoutVariant: 'offset-5',
     previewUrl: 'solis.earth/settlement',
     handwrittenNote: {
@@ -362,6 +368,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-7',
     aspectRatio: 'aspect-[16/11]',
     pigmentAccent: 'blue-grey',
+    visualMode: 'workflow',
+    watercolorVariant: 'blue-grey',
+    watercolorIntensity: 'medium',
     layoutVariant: 'lead-7',
     previewUrl: 'mnemosyne.studio/reader',
     handwrittenNote: {
@@ -520,6 +529,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-5',
     aspectRatio: 'aspect-[4/5]',
     pigmentAccent: 'cool',
+    visualMode: 'typographic',
+    watercolorVariant: 'cool',
+    watercolorIntensity: 'subtle',
     layoutVariant: 'offset-5',
     previewUrl: 'alchemist.foundry/specimen',
     handwrittenNote: {
@@ -678,6 +690,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-6',
     aspectRatio: 'aspect-[4/3]',
     pigmentAccent: 'warm',
+    visualMode: 'dashboard',
+    watercolorVariant: 'warm',
+    watercolorIntensity: 'deep',
     layoutVariant: 'standard-6',
     previewUrl: 'hyperion.trade/terminal',
     handwrittenNote: {
@@ -837,6 +852,9 @@ export const projectsData: Project[] = [
     aspectRatio: 'aspect-[4/3]',
     offsetMargin: 'lg:mt-10',
     pigmentAccent: 'muted-olive',
+    visualMode: 'mixed',
+    watercolorVariant: 'muted-olive',
+    watercolorIntensity: 'medium',
     layoutVariant: 'offset-6',
     previewUrl: 'botanica.dev/simulation',
     handwrittenNote: {
@@ -995,6 +1013,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-5',
     aspectRatio: 'aspect-[4/5]',
     pigmentAccent: 'blue-grey',
+    visualMode: 'image',
+    watercolorVariant: 'blue-grey',
+    watercolorIntensity: 'subtle',
     layoutVariant: 'offset-5',
     previewUrl: 'kinship-archive.org/folios',
     handwrittenNote: {
@@ -1153,6 +1174,9 @@ export const projectsData: Project[] = [
     colSpanDesktop: 'lg:col-span-12',
     aspectRatio: 'aspect-[21/9]',
     pigmentAccent: 'cool',
+    visualMode: 'browser',
+    watercolorVariant: 'cool',
+    watercolorIntensity: 'medium',
     layoutVariant: 'cinema-12',
     previewUrl: 'rocky.design/projects',
     handwrittenNote: {

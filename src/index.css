@@ -1,34 +1,71 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Cormorant Garamond", "Noto Serif JP", "Noto Serif SC", "Songti SC", "Source Han Serif", "Hiragino Mincho ProN", Georgia, serif;
+  --font-serif: "Cormorant Garamond", "Noto Serif JP", "Noto Serif SC", "Songti SC", Georgia, serif;
   --font-display: "Cormorant Garamond", "Noto Serif JP", "Noto Serif SC", Georgia, serif;
   --font-fraunces: "Fraunces", "Noto Serif JP", "Noto Serif SC", Georgia, serif;
-  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Microsoft YaHei", sans-serif;
+  --font-sans: "Questrial", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-handwriting: "Caveat", cursive;
 
   --color-paper: #F5F4ED;
+  --color-paper-base: #F5F4ED;
   --color-paper-secondary: #ECEADE;
+  --color-paper-darker: #E5E2D6;
+  --color-paper-warm: #FAF8F0;
+  --color-paper-cool: #EFF2F5;
   --color-paper-subtle: #F0EFE6;
   --color-paper-border: #E2DFD2;
+  --color-paper-border-strong: #CDC9B9;
   --color-ink: #171717;
   --color-ink-muted: #67645C;
   --color-ink-faint: #9E9A90;
   --color-watercolor-cool: #6F87AA;
   --color-watercolor-warm: #BC9A64;
   --color-watercolor-grey: #637A95;
+  --color-watercolor-olive: #758269;
+  --color-rocky-purple: #8B5CF6;
+  --color-rocky-purple-bright: #A78BFA;
+  --color-rocky-purple-deep: #7C3AED;
+}
+
+:root {
+  --rocky-purple: #8B5CF6;
+  --rocky-purple-glow: rgba(139, 92, 246, 0.16);
+  --theme-bg-canvas: #F5F4ED;
+  --theme-bg-secondary: #ECEADE;
+  --theme-bg-card: #FAF9F5;
+  --theme-text-primary: #171717;
+  --theme-text-muted: #67645C;
+  --theme-text-faint: #9E9A90;
+  --theme-border: #E2DFD2;
+  --theme-border-subtle: rgba(226, 223, 210, 0.7);
+}
+
+html.theme-dark {
+  --rocky-purple: #A78BFA;
+  --rocky-purple-glow: rgba(167, 139, 250, 0.22);
+  --theme-bg-canvas: #030014;
+  --theme-bg-secondary: #08041c;
+  --theme-bg-card: #0d0826;
+  --theme-text-primary: #F5F3EF;
+  --theme-text-muted: #9E96B7;
+  --theme-text-faint: #635C7E;
+  --theme-border: rgba(139, 92, 246, 0.2);
+  --theme-border-subtle: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {
   body {
-    background-color: #F5F4ED;
-    color: #171717;
+    background-color: var(--theme-bg-canvas);
+    color: var(--theme-text-primary);
     font-family: var(--font-sans);
     letter-spacing: -0.01em;
     font-size: 16px;
     line-height: 1.6;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, .font-serif-display {
@@ -52,10 +89,36 @@
   }
 }
 
-/* Subtle paper texture overlay */
+/* Layered Editorial Paper Material System */
 .paper-grain {
-  background-image: radial-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 0);
-  background-size: 24px 24px;
+  /* Retained for backward-compat; enhanced by PaperMaterialBackground */
+  background-color: #F5F4ED;
+}
+
+/* Specific Paper Tone Surfaces for Editorial Section Breathing */
+.bg-paper-base {
+  background-color: #F5F4ED;
+}
+
+.bg-paper-secondary {
+  background-color: #ECEADE;
+}
+
+.bg-paper-darker {
+  background-color: #E5E2D6;
+}
+
+.bg-paper-warm {
+  background-color: #FAF8F0;
+}
+
+.bg-paper-cool {
+  background-color: #EFF2F5;
+}
+
+/* Edge Capillary Bleed Indicator for Technical Cards */
+.capillary-edge {
+  box-shadow: inset 0 0 0 1px rgba(226, 223, 210, 0.8), 0 1px 3px rgba(23, 23, 23, 0.02);
 }
 
 /* Custom text selection */
@@ -98,6 +161,69 @@
 
 /* Smooth Focus Ring for Accessibility */
 :focus-visible {
-  outline: 1.5px solid #6F87AA;
+  outline: 1.5px solid var(--rocky-purple);
   outline-offset: 3px;
 }
+
+/* Custom Scrollbar inspired by Rocky Blog */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(111, 135, 170, 0.28);
+  border-radius: 2px;
+}
+
+html.theme-dark ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rocky-purple);
+}
+
+/* Very Slow Ambient Typographic Marquee */
+@keyframes slowMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-slow-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: slowMarquee 50s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slow-marquee {
+    animation: none;
+  }
+}
+
+/* Studio Pulse Indicator */
+@keyframes studioPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.92);
+  }
+}
+
+.animate-studio-pulse {
+  animation: studioPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
