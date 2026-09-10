@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", "Noto Serif JP", "Noto Serif SC", "Songti SC", "Source Han Serif", "Hiragino Mincho ProN", Georgia, serif;
+  --font-display: "Cormorant Garamond", "Noto Serif JP", "Noto Serif SC", Georgia, serif;
+  --font-fraunces: "Fraunces", "Noto Serif JP", "Noto Serif SC", Georgia, serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Microsoft YaHei", sans-serif;
+  --font-handwriting: "Caveat", cursive;
+
+  --color-paper: #F5F4ED;
+  --color-paper-secondary: #ECEADE;
+  --color-paper-subtle: #F0EFE6;
+  --color-paper-border: #E2DFD2;
+  --color-ink: #171717;
+  --color-ink-muted: #67645C;
+  --color-ink-faint: #9E9A90;
+  --color-watercolor-cool: #6F87AA;
+  --color-watercolor-warm: #BC9A64;
+  --color-watercolor-grey: #637A95;
+}
+
+@layer base {
+  body {
+    background-color: #F5F4ED;
+    color: #171717;
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+    font-size: 16px;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-serif-display {
+    font-family: var(--font-serif);
+  }
+
+  /* CJK Typographic Comfort */
+  :lang(ja) {
+    line-height: 1.8;
+    word-break: break-word;
+  }
+
+  :lang(zh) {
+    line-height: 1.8;
+    word-break: break-all;
+  }
+
+  :lang(ru) {
+    line-height: 1.65;
+    hyphens: auto;
+  }
+}
+
+/* Subtle paper texture overlay */
+.paper-grain {
+  background-image: radial-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Custom text selection */
+::selection {
+  background: rgba(111, 135, 170, 0.25);
+  color: #171717;
+}
+
+/* Paper Developing Mask Reveal Animation */
+@keyframes paperDevelop {
+  0% {
+    opacity: 0;
+    clip-path: inset(8% 0% 8% 0%);
+    filter: contrast(1.15) brightness(0.96);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0% 0% 0% 0%);
+    filter: contrast(1) brightness(1);
+  }
+}
+
+.animate-paper-develop {
+  animation: paperDevelop 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Organic Watercolor Surface Tension Float */
+@keyframes watercolorFloat {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(3px, -2px) scale(1.02);
+  }
+}
+
+.group:hover .watercolor-micro-motion {
+  animation: watercolorFloat 4.5s ease-in-out infinite;
+}
+
+/* Smooth Focus Ring for Accessibility */
+:focus-visible {
+  outline: 1.5px solid #6F87AA;
+  outline-offset: 3px;
+}
