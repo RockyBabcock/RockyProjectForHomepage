@@ -236,28 +236,80 @@ function renderArtifactHeader({ mode, project, viewMode, setViewMode }: HeaderPr
       );
 
     /* -----------------------------------------------------------------------
-       02: INTERFACE — Minimal Cartographic / Atmospheric Telemetry Instrument
+       01: INTERFACE — Verified Multi-Source Brand & Technology SVG Asset Registry
        ----------------------------------------------------------------------- */
     case 'interface':
       return (
-        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#ECEADE]/95 border-b border-[#E2DFD2] text-[11px] font-mono">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#171717] text-[#FAF9F5] border-b border-[#2E2D29] text-[11px] font-mono">
           <div className="flex items-center gap-2">
-            <Compass className="w-3 h-3 text-[#BC9A64]" />
-            <span className="text-[10px] sm:text-[11px] font-medium tracking-tight text-[#171717]">
-              SOLIS_TELEMETRY
+            <FileCode className="w-3 h-3 text-[#8B5CF6]" />
+            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-[#FAF9F5]">
+              SVG_REGISTRY // VERIFIED MULTI-SOURCE
             </span>
             <span className="text-[#8C887B] hidden sm:inline text-[10px]">
-              34.204° N · 118.172° W · 1013.2 hPa
+              [ Simple Icons · Devicon · Iconify ]
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1 text-[9px] text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs border border-emerald-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-              ORACLE LIVE
+            <span className="hidden sm:inline-flex items-center gap-1 text-[9px] text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded-xs border border-emerald-800/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              SHA-256 VERIFIED
             </span>
             {renderModeSwitcher()}
-            <span className="text-[#BC9A64] font-semibold text-[10px]">#{project.number}</span>
+            <span className="text-[#8B5CF6] font-semibold text-[10px]">#{project.number}</span>
+          </div>
+        </div>
+      );
+
+    /* -----------------------------------------------------------------------
+       02: 3D-SPATIAL — Spatial Web Portfolio & Interactive Three.js Scene
+       ----------------------------------------------------------------------- */
+    case '3d-spatial':
+      return (
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#0d0722] text-[#FAF9F5] border-b border-violet-950/80 text-[11px] font-mono">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-violet-100">
+              SPATIAL_3D // SCENE GRAPH
+            </span>
+            <span className="text-violet-400/60 hidden md:inline text-[10px]">
+              [ 3D Orbit Camera · Perspective Projection · Vector Engine ]
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="text-violet-300 text-[10px] hidden sm:inline px-1.5 py-0.5 bg-violet-950/60 rounded-xs border border-violet-800/60">
+              FPS: 60.0
+            </span>
+            {renderModeSwitcher()}
+            <span className="text-violet-400 font-semibold text-[10px]">#{project.number}</span>
+          </div>
+        </div>
+      );
+
+    /* -----------------------------------------------------------------------
+       03: AI-CAROUSEL — Generative AI Product Canvas & Cylindrical Model Explorer
+       ----------------------------------------------------------------------- */
+    case 'ai-carousel':
+      return (
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#120e0a] text-[#FAF9F5] border-b border-amber-950/70 text-[11px] font-mono">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-amber-100">
+              AI_CANVAS // CYLINDRICAL CAROUSEL
+            </span>
+            <span className="text-amber-300/60 hidden sm:inline text-[10px]">
+              [ Video · Image · Audio · Motion ]
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:inline text-[9px] text-amber-300 px-1.5 py-0.5 bg-amber-950/60 rounded-xs border border-amber-800/60">
+              3D PERSPECTIVE
+            </span>
+            {renderModeSwitcher()}
+            <span className="text-amber-400 font-semibold text-[10px]">#{project.number}</span>
           </div>
         </div>
       );

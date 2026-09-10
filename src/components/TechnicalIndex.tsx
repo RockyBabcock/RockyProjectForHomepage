@@ -28,13 +28,13 @@ export const TechnicalIndex: React.FC = () => {
       ],
     },
     {
-      category: 'SYSTEMS & WEB3',
+      category: 'SPATIAL & GRAPHICS',
       tools: [
-        { name: 'Node.js & Edge APIs', role: 'Serverless compute, streaming endpoints, proxying' },
-        { name: 'Ethers / Viem / Wagmi', role: 'Smart contract RPCs, transaction encoding' },
-        { name: 'Decentralized Oracles', role: 'Cryptographic data feeds, dispute mechanisms' },
-        { name: 'Arweave / IPFS', role: 'Permanent immutable storage, cryptographic hashing' },
-        { name: 'WebSocket Telemetry', role: 'Real-time orderbooks, agent trace feeds' },
+        { name: 'Three.js & WebGL2', role: 'Scene graph orchestration, geometry buffers, procedural materials' },
+        { name: 'React Three Fiber', role: 'Declarative 3D components, spring camera physics, Drei helpers' },
+        { name: 'GLSL Shaders', role: 'Custom vertex displacement, fragment coloring, specular highlights' },
+        { name: 'Spatial Routing', role: 'Mapping URL routes to 3D camera viewpoints and focal coordinates' },
+        { name: 'Performance Budget', role: 'Draw call batching, memory disposal, sub-pixel canvas scaling' },
       ],
     },
     {

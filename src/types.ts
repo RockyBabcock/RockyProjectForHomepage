@@ -1,14 +1,11 @@
 import { MultilingualText, MultilingualArray } from './i18n/types';
 
-export type ProjectCategory = 'All' | 'AI' | 'Web3' | 'Open Source' | 'Experiment' | 'Design';
+export type ProjectCategory = 'All' | 'Tools' | '3D' | 'AI' | 'Experiment';
 export type ProjectType =
-  | 'AI AGENT'
-  | 'AI TOOL'
-  | 'WEB APP'
-  | 'WEB3'
-  | 'OPEN SOURCE'
-  | 'EXPERIMENT'
-  | 'DESIGN TOOL';
+  | 'ASSET REGISTRY'
+  | 'SPATIAL 3D WEB'
+  | 'AI PRODUCT CANVAS'
+  | 'DEVELOPER TOOL';
 
 export type ProjectStatus = 'Live' | 'Building' | 'Beta' | 'Archived';
 export type SortOption = 'Featured' | 'Newest' | 'Oldest';
@@ -40,6 +37,8 @@ export type LayoutVariant = 'lead-7' | 'offset-5' | 'cinema-12' | 'standard-6' |
 export type VisualArtifactMode =
   | 'browser'
   | 'interface'
+  | '3d-spatial'
+  | 'ai-carousel'
   | 'terminal'
   | 'agent-graph'
   | 'dashboard'

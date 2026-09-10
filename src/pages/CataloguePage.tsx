@@ -37,7 +37,7 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
   const sortParam = searchParams.get('sort');
   const qParam = searchParams.get('q') || searchParams.get('search') || '';
 
-  const validCategories: ProjectCategory[] = ['All', 'AI', 'Web3', 'Open Source', 'Experiment', 'Design'];
+  const validCategories: ProjectCategory[] = ['All', 'Tools', '3D', 'AI', 'Experiment'];
   const selectedCategory: ProjectCategory = (categoryParam && validCategories.includes(categoryParam as ProjectCategory))
     ? (categoryParam as ProjectCategory)
     : 'All';

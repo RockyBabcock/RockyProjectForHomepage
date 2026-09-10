@@ -41,11 +41,13 @@ export interface UITranslations {
     filterLabel: string;
     sortLabel: string;
     all: string;
+    tools: string;
+    threeD: string;
     ai: string;
-    web3: string;
-    openSource: string;
+    web3?: string;
+    openSource?: string;
     experiment: string;
-    design: string;
+    design?: string;
     featured: string;
     newest: string;
     oldest: string;

@@ -15,7 +15,7 @@ interface CatalogueFiltersProps {
   filteredCount: number;
 }
 
-const CATEGORIES: ProjectCategory[] = ['All', 'AI', 'Web3', 'Open Source', 'Experiment', 'Design'];
+const CATEGORIES: ProjectCategory[] = ['All', 'Tools', '3D', 'AI', 'Experiment'];
 const SORT_OPTIONS: SortOption[] = ['Featured', 'Newest', 'Oldest'];
 
 export const CatalogueFilters: React.FC<CatalogueFiltersProps> = ({
@@ -36,16 +36,14 @@ export const CatalogueFilters: React.FC<CatalogueFiltersProps> = ({
     switch (cat) {
       case 'All':
         return t.filters.all;
+      case 'Tools':
+        return t.filters.tools;
+      case '3D':
+        return t.filters.threeD;
       case 'AI':
         return t.filters.ai;
-      case 'Web3':
-        return t.filters.web3;
-      case 'Open Source':
-        return t.filters.openSource;
       case 'Experiment':
         return t.filters.experiment;
-      case 'Design':
-        return t.filters.design;
       default:
         return cat;
     }
