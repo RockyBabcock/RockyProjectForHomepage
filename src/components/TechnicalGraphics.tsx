@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
 
 // =========================================================================
@@ -37,7 +38,7 @@ export const TechnicalField: React.FC<TechnicalFieldProps> = ({
               d={`M ${spacing / 2 - 3} ${spacing / 2} h 6 M ${spacing / 2} ${spacing / 2 - 3} v 6`}
               stroke={isDark ? '#8B5CF6' : '#171717'}
               strokeWidth="0.8"
-              strokeOpacity="0.4"
+              strokeOpacity={isDark ? '0.35' : '0.22'}
               fill="none"
             />
             <circle
@@ -45,6 +46,7 @@ export const TechnicalField: React.FC<TechnicalFieldProps> = ({
               cy={spacing / 2}
               r="0.75"
               fill={isDark ? '#C4B5FD' : '#7C3AED'}
+              fillOpacity={isDark ? 0.7 : 0.4}
             />
           </pattern>
         </defs>
@@ -86,23 +88,23 @@ export const SignalPath: React.FC<SignalPathProps> = ({
       viewBox={`0 0 ${Math.max(endX, 200)} ${Math.max(endY, 100)}`}
       aria-hidden="true"
     >
-      {/* Base wire */}
+      {/* Base architectural wire */}
       <path
         d={pathD}
         fill="none"
-        stroke={isDark ? 'rgba(139, 92, 246, 0.25)' : 'rgba(0, 0, 0, 0.12)'}
-        strokeWidth="1.2"
+        stroke={isDark ? 'rgba(167, 139, 250, 0.22)' : 'rgba(0, 0, 0, 0.14)'}
+        strokeWidth="1"
         strokeDasharray={dashed ? '4 4' : undefined}
       />
       {/* Flowing illuminated packet */}
       <path
         d={pathD}
         fill="none"
-        stroke={isDark ? '#A78BFA' : '#7C3AED'}
-        strokeWidth="2"
-        strokeDasharray="12 120"
+        stroke={isDark ? '#C4B5FD' : '#7C3AED'}
+        strokeWidth="1.75"
+        strokeDasharray="14 120"
         strokeDashoffset="0"
-        className="animate-[dash_3s_linear_infinite]"
+        className="animate-[dash_3.5s_linear_infinite]"
       />
     </svg>
   );
@@ -132,28 +134,28 @@ export const OrbitGraphic: React.FC<OrbitGraphicProps> = ({
     >
       {/* Outer Ring */}
       <div
-        className={`absolute inset-0 rounded-full border border-dashed transition-transform duration-700 animate-[spin_60s_linear_infinite] ${
-          isDark ? 'border-violet-500/30' : 'border-neutral-400/40'
+        className={`absolute inset-0 rounded-full border border-dashed transition-transform duration-700 animate-[spin_80s_linear_infinite] ${
+          isDark ? 'border-violet-500/25' : 'border-neutral-400/35'
         }`}
       />
       {/* Middle Concentric Ring */}
       <div
-        className={`absolute inset-8 rounded-full border transition-transform duration-700 animate-[spin_40s_linear_infinite_reverse] ${
-          isDark ? 'border-violet-400/25' : 'border-purple-600/20'
+        className={`absolute inset-8 rounded-full border transition-transform duration-700 animate-[spin_50s_linear_infinite_reverse] ${
+          isDark ? 'border-violet-400/20' : 'border-purple-600/18'
         }`}
       >
         {/* Orbiting Satellite Node */}
-        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_6px_rgba(167,139,250,0.8)]" />
       </div>
       {/* Inner Ring */}
       <div
         className={`absolute inset-16 rounded-full border border-dotted ${
-          isDark ? 'border-violet-600/35' : 'border-black/20'
+          isDark ? 'border-violet-600/30' : 'border-black/15'
         }`}
       />
       {/* Center Reticle */}
       <div
-        className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
           isDark ? 'border-violet-300 text-violet-300' : 'border-black text-black'
         }`}
       >
@@ -211,7 +213,7 @@ export const NodeNetwork: React.FC<NodeNetworkProps> = ({
                   ? 'rgba(139, 92, 246, 0.25)'
                   : 'rgba(0, 0, 0, 0.15)'
               }
-              strokeWidth={isActive ? 2 : 1}
+              strokeWidth={isActive ? 1.5 : 0.75}
               strokeDasharray={isActive ? '4 2' : undefined}
             />
           );
@@ -253,7 +255,7 @@ interface DataTraceProps {
 }
 
 export const DataTrace: React.FC<DataTraceProps> = ({
-  label = 'SYS_PIPE_ACTIVE',
+  label = 'SYS_ALIGN_OK',
   className = '',
 }) => {
   const { mode } = useSurfaceMode();
@@ -265,14 +267,14 @@ export const DataTrace: React.FC<DataTraceProps> = ({
     >
       <div
         className={`absolute inset-0 ${
-          isDark ? 'bg-violet-900/30' : 'bg-neutral-300/60'
+          isDark ? 'bg-violet-900/25' : 'bg-neutral-300/50'
         }`}
       />
       {/* Scanning Laser / Pulse Beam */}
       <div
-        className={`absolute top-0 bottom-0 w-32 animate-[scanning_4s_easeInOut_infinite] ${
+        className={`absolute top-0 bottom-0 w-28 animate-[scanning_4s_easeInOut_infinite] ${
           isDark
-            ? 'bg-gradient-to-r from-transparent via-violet-400 to-transparent shadow-[0_0_8px_#A78BFA]'
+            ? 'bg-gradient-to-r from-transparent via-violet-400 to-transparent shadow-[0_0_6px_#A78BFA]'
             : 'bg-gradient-to-r from-transparent via-purple-600 to-transparent'
         }`}
       />
@@ -284,7 +286,7 @@ export const DataTrace: React.FC<DataTraceProps> = ({
 };
 
 // =========================================================================
-// 6. GridOverlay: Architectural 12-column & baseline grid for easter egg toggle
+// 6. GridOverlay: Architectural 12-column & rhythmic baseline drawing
 // =========================================================================
 interface GridOverlayProps {
   isVisible: boolean;
@@ -292,35 +294,149 @@ interface GridOverlayProps {
 }
 
 export const GridOverlay: React.FC<GridOverlayProps> = ({ isVisible, onClose }) => {
-  if (!isVisible) return null;
+  const { mode } = useSurfaceMode();
+  const isDark = mode === 'dark';
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-[9000] pointer-events-none select-none"
-      aria-hidden="true"
-    >
-      {/* 12-Column Grid Guide Lines */}
-      <div className="max-w-[1560px] mx-auto px-6 sm:px-10 lg:px-16 h-full grid grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
-        {Array.from({ length: 12 }).map((_, i) => (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          onClick={onClose}
+          className="fixed inset-0 z-[9000] pointer-events-auto select-none cursor-crosshair overflow-hidden"
+          aria-hidden="true"
+        >
+          {/* Tinted Architectural Blueprint Backdrop */}
           <div
-            key={i}
-            className="h-full border-x border-violet-500/15 bg-violet-500/[0.015] flex flex-col justify-between py-4"
-          >
-            <span className="font-mono text-[9px] text-violet-400/40 text-center">
-              COL {String(i + 1).padStart(2, '0')}
-            </span>
-            <span className="font-mono text-[9px] text-violet-400/40 text-center">
-              COL {String(i + 1).padStart(2, '0')}
-            </span>
-          </div>
-        ))}
-      </div>
+            className={`absolute inset-0 transition-opacity duration-300 ${
+              isDark ? 'bg-[#030014]/65 backdrop-blur-[2px]' : 'bg-[#F5F4ED]/65 backdrop-blur-[2px]'
+            }`}
+          />
 
-      {/* Floating Status Indicator for the Architect Grid */}
-      <div className="fixed bottom-6 right-6 font-mono text-[10px] uppercase px-3 py-1.5 rounded-full bg-violet-950/80 border border-violet-500/40 text-violet-300 backdrop-blur-md">
-        ARCHITECT GRID ACTIVE (PRESS G TO TOGGLE)
-      </div>
-    </div>
+          {/* Horizontal Rhythmic Baseline Grid Lines (Every 80px) */}
+          <div className="absolute inset-0 pointer-events-none flex flex-col justify-between overflow-hidden">
+            {Array.from({ length: 14 }).map((_, rIdx) => (
+              <motion.div
+                key={`row-${rIdx}`}
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 0.45,
+                  delay: rIdx * 0.015,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className={`w-full flex items-center justify-between px-4 border-b ${
+                  isDark ? 'border-violet-500/10' : 'border-neutral-900/10'
+                }`}
+                style={{ height: '7.14%' }}
+              >
+                <span
+                  className={`font-mono text-[8px] tracking-widest ${
+                    isDark ? 'text-violet-400/35' : 'text-neutral-500/40'
+                  }`}
+                >
+                  {String(rIdx * 80).padStart(4, '0')}PX
+                </span>
+                <span
+                  className={`font-mono text-[8px] tracking-widest ${
+                    isDark ? 'text-violet-400/35' : 'text-neutral-500/40'
+                  }`}
+                >
+                  MOD {String(rIdx + 1).padStart(2, '0')}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* 12-Column Architectural System with Top-to-Bottom Draw Animation */}
+          <div className="relative max-w-[1560px] mx-auto px-6 sm:px-10 lg:px-16 h-full grid grid-cols-12 gap-4 sm:gap-6 lg:gap-10">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <motion.div
+                key={`col-${i}`}
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                exit={{ scaleY: 0 }}
+                transition={{
+                  duration: 0.42,
+                  delay: i * 0.02,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                style={{ transformOrigin: 'top' }}
+                className={`h-full border-x flex flex-col justify-between py-6 ${
+                  isDark
+                    ? 'border-violet-500/20 bg-violet-600/[0.02]'
+                    : 'border-neutral-800/15 bg-neutral-900/[0.015]'
+                }`}
+              >
+                {/* Column Head Registration & Number */}
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className={`w-2 h-[1px] ${isDark ? 'bg-violet-400/40' : 'bg-neutral-800/30'}`}
+                  />
+                  <span
+                    className={`font-mono text-[9px] tracking-[0.2em] font-semibold ${
+                      isDark ? 'text-violet-300/60' : 'text-neutral-800/60'
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+
+                {/* Column Foot Registration */}
+                <div className="flex flex-col items-center gap-1">
+                  <span
+                    className={`font-mono text-[9px] tracking-[0.2em] font-semibold ${
+                      isDark ? 'text-violet-300/60' : 'text-neutral-800/60'
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div
+                    className={`w-2 h-[1px] ${isDark ? 'bg-violet-400/40' : 'bg-neutral-800/30'}`}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Architectural Registration Crosshairs in Corners */}
+          <div className="absolute top-6 left-6 font-mono text-[10px] text-violet-400/50 pointer-events-none">
+            +
+          </div>
+          <div className="absolute top-6 right-6 font-mono text-[10px] text-violet-400/50 pointer-events-none">
+            +
+          </div>
+          <div className="absolute bottom-6 left-6 font-mono text-[10px] text-violet-400/50 pointer-events-none">
+            +
+          </div>
+          <div className="absolute bottom-6 right-6 font-mono text-[10px] text-violet-400/50 pointer-events-none">
+            +
+          </div>
+
+          {/* Architectural Design System Legend Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className={`fixed bottom-8 right-8 font-mono text-[9px] tracking-[0.22em] uppercase px-4 py-2 rounded-xs border backdrop-blur-md z-30 shadow-lg ${
+              isDark
+                ? 'bg-[#0b0522]/90 border-violet-500/40 text-violet-200'
+                : 'bg-white/90 border-neutral-300 text-neutral-800'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+              <span>12-COL DESIGN SYSTEM // PRESS G TO DISMISS</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
+
