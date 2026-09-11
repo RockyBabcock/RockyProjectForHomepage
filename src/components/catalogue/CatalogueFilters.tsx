@@ -1,0 +1,1 @@
+export { CatalogueFilters } from '../CatalogueFilters';

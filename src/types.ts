@@ -1,14 +1,40 @@
 import { MultilingualText, MultilingualArray } from './i18n/types';
 
-export type ProjectCategory = 'All' | 'Tools' | '3D' | 'AI' | 'Experiment';
+export type ProjectCategory = 'All' | 'Tools' | '3D' | 'AI' | 'Web3' | 'Experiment' | 'Labs' | 'Archive';
 export type ProjectType =
   | 'ASSET REGISTRY'
   | 'SPATIAL 3D WEB'
   | 'AI PRODUCT CANVAS'
-  | 'DEVELOPER TOOL';
+  | 'DEVELOPER TOOL'
+  | 'DECENTRALIZED PROTOCOL'
+  | 'CREATIVE COMPUTATION'
+  | 'RESEARCH PROTOTYPE';
 
-export type ProjectStatus = 'Live' | 'Building' | 'Beta' | 'Archived';
+export type EntryType = 'FEATURED' | 'PROJECT' | 'EXPERIMENT' | 'LAB' | 'ARCHIVE';
+export type ProjectDiscipline = 'DESIGN' | 'ENGINEERING' | 'AI' | 'WEB3' | '3D' | 'CREATIVE CODE';
+
+export type ProjectStatus = 'Live' | 'Building' | 'Beta' | 'Prototype' | 'Archived';
 export type SortOption = 'Featured' | 'Newest' | 'Oldest';
+
+export interface ProjectMetric {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
+export interface DesignDecisionNote {
+  number?: string;
+  title: MultilingualText;
+  rationale: MultilingualText;
+  impact?: MultilingualText;
+}
+
+export interface ProjectLinks {
+  live?: string;
+  github?: string;
+  figma?: string;
+  additional?: { label: string; url: string }[];
+}
 
 export interface ProjectVisual {
   url: string;
@@ -34,13 +60,18 @@ export interface ProjectMediaItem {
 
 export interface ProjectDetailedContent {
   about: MultilingualText;
+  problem?: MultilingualText;
+  process?: MultilingualText;
   designApproach: MultilingualArray;
+  designDecisions?: DesignDecisionNote[];
   visuals: ProjectVisual[];
   interactionExperience?: MultilingualArray;
   technicalApproach?: MultilingualArray;
   editorialQuote?: MultilingualText;
   colophon?: ProjectColophon;
   quoteAuthor?: MultilingualText;
+  outcome?: MultilingualText;
+  reflection?: MultilingualText;
 }
 
 export type LayoutVariant = 'lead-7' | 'offset-5' | 'cinema-12' | 'standard-6' | 'offset-6';
@@ -73,10 +104,13 @@ export interface Project {
   number: string;
   title: MultilingualText;
   type: ProjectType;
+  entryType?: EntryType;
   eyebrow: MultilingualText;
   summary: MultilingualText;
+  thesis?: MultilingualText;
   description: MultilingualText;
   category: ProjectCategory;
+  disciplines?: ProjectDiscipline[];
   tags: string[];
   year: string;
   status: ProjectStatus;
@@ -84,10 +118,15 @@ export interface Project {
   cover: string;
   previewUrl: string;
   role: MultilingualText;
+  contribution?: string[];
+  timeline?: string;
+  team?: string;
   tools: string[];
   technologies?: string[];
   github?: string;
   demo?: string;
+  links?: ProjectLinks;
+  metrics?: ProjectMetric[];
   colSpanDesktop?: string;
   aspectRatio?: string;
   pigmentAccent: 'cool' | 'warm' | 'blue-grey' | 'ochre' | 'muted-olive';
@@ -105,5 +144,21 @@ export interface Project {
   mobileMedia?: ProjectMediaItem;
   detailMedia?: ProjectMediaItem[];
   detailedContent: ProjectDetailedContent;
+}
+
+export interface ExperimentItem {
+  id: string;
+  title: MultilingualText;
+  description: MultilingualText;
+  discipline: ProjectDiscipline;
+  category: string;
+  year: string;
+  status: ProjectStatus;
+  tags: string[];
+  thumbnail: string;
+  github?: string;
+  liveUrl?: string;
+  interactiveSnippet?: string;
+  notes?: string;
 }
 

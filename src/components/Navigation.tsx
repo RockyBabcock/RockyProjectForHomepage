@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowUpRight, Menu, X, Sun, Moon } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sun, Moon, Search, Command } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface NavigationProps {
   onOpenStatement?: () => void;
+  onOpenCommand?: () => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
+export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenCommand }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { t } = useLanguage();
   const { mode, toggleMode } = useSurfaceMode();
   const isDark = mode === 'dark';
 
-  const isWorkActive = location.pathname === '/' || location.pathname.startsWith('/projects');
+  const isWorkActive = location.pathname === '/';
+  const isArchiveActive = location.pathname.startsWith('/archive') || location.pathname.startsWith('/projects');
+  const isExperimentsActive = location.pathname.startsWith('/experiments');
 
   return (
     <header
@@ -38,7 +41,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
               rocky<span className="text-[#8B5CF6] font-serif">.</span>
             </span>
             <span className="text-[11px] uppercase font-mono tracking-[0.24em] opacity-60">
-              / WORK
+              / ARCHIVE
             </span>
           </Link>
 
@@ -52,7 +55,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
         {/* Desktop Navigation */}
         <nav
           aria-label="Main Navigation"
-          className="hidden md:flex items-center gap-7 text-[12px] uppercase tracking-[0.2em] font-mono"
+          className="hidden md:flex items-center gap-6 text-[12px] uppercase tracking-[0.2em] font-mono"
         >
           <Link
             to="/"
@@ -63,8 +66,38 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
                 : 'opacity-65 hover:opacity-100'
             }`}
           >
-            <span>{t.nav.projects}</span>
+            <span>SELECTED</span>
             {isWorkActive && (
+              <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-[#8B5CF6]" />
+            )}
+          </Link>
+
+          <Link
+            to="/archive"
+            aria-current={isArchiveActive ? 'page' : undefined}
+            className={`transition-colors py-1 relative ${
+              isArchiveActive
+                ? 'font-semibold text-current'
+                : 'opacity-65 hover:opacity-100'
+            }`}
+          >
+            <span>CATALOGUE</span>
+            {isArchiveActive && (
+              <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-[#8B5CF6]" />
+            )}
+          </Link>
+
+          <Link
+            to="/experiments"
+            aria-current={isExperimentsActive ? 'page' : undefined}
+            className={`transition-colors py-1 relative ${
+              isExperimentsActive
+                ? 'font-semibold text-current'
+                : 'opacity-65 hover:opacity-100'
+            }`}
+          >
+            <span>LABS</span>
+            {isExperimentsActive && (
               <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-[#8B5CF6]" />
             )}
           </Link>
@@ -88,18 +121,20 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
             <ArrowUpRight className="w-3 h-3 opacity-60 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
 
-          <a
-            href="https://github.com/rockybuildingaiweb3-boop/rocky-homepage-unfinished"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-65 hover:opacity-100 transition-opacity py-1 inline-flex items-center gap-1 group"
-          >
-            <span>{t.nav.github}</span>
-            <ArrowUpRight className="w-3 h-3 opacity-60 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
+          {/* Command Palette trigger */}
+          {onOpenCommand && (
+            <button
+              onClick={onOpenCommand}
+              className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-mono opacity-70 hover:opacity-100 border border-current/20 hover:border-[#8B5CF6] rounded-xs transition-all cursor-pointer"
+              title="Quick command search (Cmd+K or /)"
+            >
+              <Search className="w-3 h-3 text-[#8B5CF6]" />
+              <span className="text-[10px]">⌘K</span>
+            </button>
+          )}
 
           {/* Surface Mode Switcher: Paper / Studio Dark */}
-          <div className="pl-3 border-l border-current/15">
+          <div className="pl-2 border-l border-current/15">
             <button
               onClick={toggleMode}
               className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] uppercase tracking-wider font-mono rounded-xs border border-current/15 hover:border-current/40 transition-colors cursor-pointer"
@@ -121,13 +156,23 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
           </div>
 
           {/* Language Switcher */}
-          <div className="pl-3 border-l border-current/15">
+          <div className="pl-2 border-l border-current/15">
             <LanguageSwitcher />
           </div>
         </nav>
 
         {/* Mobile controls */}
-        <div className="flex md:hidden items-center gap-2.5">
+        <div className="flex md:hidden items-center gap-2">
+          {onOpenCommand && (
+            <button
+              onClick={onOpenCommand}
+              className="p-1.5 rounded-xs border border-current/20 text-xs font-mono"
+              aria-label="Search archive"
+            >
+              <Search className="w-3.5 h-3.5 text-[#8B5CF6]" />
+            </button>
+          )}
+
           {/* Surface Mode button on mobile */}
           <button
             onClick={toggleMode}
@@ -171,7 +216,23 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement }) => {
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 font-semibold text-current"
             >
-              {t.nav.projects}
+              SELECTED WORK
+            </Link>
+
+            <Link
+              to="/archive"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 opacity-80 hover:opacity-100 text-current"
+            >
+              CATALOGUE ARCHIVE
+            </Link>
+
+            <Link
+              to="/experiments"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 opacity-80 hover:opacity-100 text-current"
+            >
+              CREATIVE LABS
             </Link>
 
             {onOpenStatement && (
