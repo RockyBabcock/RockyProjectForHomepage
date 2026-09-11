@@ -117,45 +117,45 @@ export const ProjectDetailPage: React.FC = () => {
 
       {/* Top Breadcrumb Navigation & Keyboard Shortcuts */}
       <div
-        className={`max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-8 sm:pt-10 pb-6 border-b transition-colors ${
-          isDark ? 'border-violet-950/40' : 'border-[#E2DFD2]/60'
+        className={`max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 pt-8 sm:pt-12 pb-6 border-b transition-colors ${
+          isDark ? 'border-violet-950/30' : 'border-[#E2DFD2]/60'
         }`}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Link
             to="/"
-            className={`group inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.18em] font-mono transition-colors ${
-              isDark ? 'text-violet-300 hover:text-white' : 'text-[#67645C] hover:text-[#171717]'
+            className={`group inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-mono transition-colors ${
+              isDark ? 'text-violet-300/80 hover:text-white' : 'text-[#67645C] hover:text-[#171717]'
             }`}
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            <span>back to selected work</span>
+            <span>back to work</span>
           </Link>
 
           {/* Keyboard hints */}
-          <div className="hidden md:flex items-center gap-4 font-mono text-[11px] opacity-60">
-            <span className="flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-5 font-mono text-xs opacity-50">
+            <span className="flex items-center gap-1.5">
               <kbd className="px-1.5 py-0.5 border border-current/20 rounded text-[10px]">←</kbd>
               <span>prev</span>
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1.5">
               <kbd className="px-1.5 py-0.5 border border-current/20 rounded text-[10px]">→</kbd>
               <span>next</span>
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1.5">
               <kbd className="px-1.5 py-0.5 border border-current/20 rounded text-[10px]">esc</kbd>
               <span>return</span>
             </span>
-            <span className="opacity-40">|</span>
-            <span className="uppercase tracking-wider text-[10px]">
-              plate #{project.number} // 2024—2026 archive
+            <span className="opacity-30">|</span>
+            <span className="uppercase tracking-wider text-[11px]">
+              {project.number} / {project.slug}
             </span>
           </div>
         </div>
       </div>
 
       {/* Main Exhibition Container */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-10 sm:pt-16 space-y-16 sm:space-y-24">
+      <div className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 pt-10 sm:pt-16 space-y-16 sm:space-y-24">
         {/* Project Hero (Cinematic Reveal + Dominating Artifact) */}
         <ProjectHero
           project={project}

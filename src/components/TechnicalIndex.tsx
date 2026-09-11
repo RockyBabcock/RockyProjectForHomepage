@@ -48,50 +48,43 @@ export const TechnicalIndex: React.FC = () => {
   return (
     <section
       id="technical-index"
-      className={`py-16 sm:py-24 border-t transition-colors duration-300 ${
-        isDark ? 'border-violet-950/40 bg-[#030014]' : 'border-[#E2DFD2] bg-[#FAF8F0]/60'
+      className={`py-20 sm:py-28 border-t transition-colors duration-300 ${
+        isDark ? 'border-violet-950/40 bg-[#030014]/60' : 'border-[#E2DFD2]/60 bg-[#FAF8F0]/40'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-8 border-b border-current/10">
-          <div className="space-y-1">
-            <span
-              className={`text-[11px] font-mono uppercase tracking-[0.24em] ${
-                isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
-              }`}
-            >
-              [ TECHNICAL INDEX ]
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
-              technical index<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+        <div className="flex items-baseline justify-between pb-8 border-b border-current/10">
+          <div>
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-[-0.03em] lowercase">
+              colophon<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
             </h2>
           </div>
-          <p className="text-xs font-mono opacity-60 uppercase tracking-widest max-w-xs sm:text-right">
-            Editorial breakdown of active engineering disciplines & instruments
-          </p>
+          <span className="text-xs font-mono opacity-50 uppercase tracking-[0.2em]">
+            Engineering & Tools
+          </span>
         </div>
 
-        {/* 4 Clean Editorial Category Blocks (NO progress bars, NO percentage bars) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 pt-10">
+        {/* 4 Clean Editorial Category Blocks */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 pt-12">
           {categories.map((cat, idx) => (
             <div key={idx} className="space-y-4">
-              <div className="pb-2 border-b border-current/10 flex items-center justify-between">
-                <span className="font-mono text-[11px] uppercase tracking-[0.18em] font-semibold opacity-80">
+              <div className="pb-2.5 border-b border-current/10 flex items-center justify-between">
+                <span className="font-mono text-xs uppercase tracking-[0.2em] font-medium opacity-70">
                   {cat.category}
                 </span>
-                <span className="font-mono text-[10px] opacity-40">
+                <span className="font-mono text-[11px] opacity-35">
                   0{idx + 1}
                 </span>
               </div>
 
-              <ul className="space-y-3.5">
+              <ul className="space-y-4">
                 {cat.tools.map((t, tIdx) => (
-                  <li key={tIdx} className="space-y-0.5">
-                    <div className="font-mono text-[13px] font-medium tracking-tight">
+                  <li key={tIdx} className="space-y-1">
+                    <div className="font-mono text-xs font-medium tracking-tight">
                       {t.name}
                     </div>
-                    <div className="text-[12px] opacity-65 font-sans leading-snug font-light">
+                    <div className="text-xs opacity-60 font-sans leading-relaxed font-light">
                       {t.role}
                     </div>
                   </li>

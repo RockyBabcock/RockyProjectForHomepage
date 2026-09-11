@@ -49,36 +49,29 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
       <ProjectRail projects={[featuredProject, ...secondaryProjects]} />
 
       {/* =========================================================================
-          02. SELECTED WORK: Hierarchy of Featured & Secondary Exhibition Plates
+          02. SELECTED WORK: Flagship & Secondary Projects
           ========================================================================= */}
       <section
         id="selected-work"
         ref={selectedWorkRef}
-        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-24 pb-12 border-b border-current/10"
+        className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 pt-20 sm:pt-28 pb-16"
       >
-        {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-8 border-b border-current/10">
-          <div className="space-y-1">
-            <span
-              className={`text-[11px] font-mono uppercase tracking-[0.24em] ${
-                isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
-              }`}
-            >
-              [ SELECTED WORK · 2024—2026 ]
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
-              exhibition plates<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+        {/* Section Header: Minimal & Confident */}
+        <div className="flex items-baseline justify-between pb-8 border-b border-current/10">
+          <div>
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-[-0.03em] lowercase">
+              selected work<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
             </h2>
           </div>
-          <p className="text-xs font-mono opacity-60 uppercase tracking-widest max-w-xs sm:text-right">
-            Verified software artifacts, spatial 3D scenes & generative AI canvases
-          </p>
+          <span className="text-xs font-mono opacity-50 uppercase tracking-[0.2em]">
+            01 — {String(projectsData.length).padStart(2, '0')}
+          </span>
         </div>
 
-        {/* 1. FEATURED PROJECT (Substantially More Visual Weight) */}
+        {/* 1. FEATURED PROJECT */}
         <FeaturedProject project={featuredProject} />
 
-        {/* 2. SECONDARY PROJECTS (Balanced 2-Column Grid) */}
+        {/* 2. SECONDARY PROJECTS (Spacious 2-Column Grid) */}
         <ProjectGrid projects={secondaryProjects} />
       </section>
 

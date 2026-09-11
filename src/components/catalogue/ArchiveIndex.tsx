@@ -48,31 +48,24 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
   return (
     <section
       id="archive-directory"
-      className={`max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 transition-colors duration-300 ${
+      className={`max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 py-20 sm:py-28 transition-colors duration-300 ${
         isDark ? 'text-[#F5F3EF]' : 'text-[#171717]'
       }`}
     >
       {/* Index Header */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-8 border-b border-current/10">
-        <div className="space-y-1">
-          <span
-            className={`text-[11px] font-mono uppercase tracking-[0.24em] ${
-              isDark ? 'text-violet-400' : 'text-[#8B5CF6]'
-            }`}
-          >
-            [ COMPLETE DIRECTORY · 2024—2026 ]
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight lowercase">
-            exhibition catalogue<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+      <div className="flex items-baseline justify-between pb-8 border-b border-current/10">
+        <div>
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-[-0.03em] lowercase">
+            archive index<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
           </h2>
         </div>
-        <p className="text-xs font-mono opacity-60 uppercase tracking-widest max-w-xs sm:text-right">
-          Indexed inventory of verified software artifacts, 3D scenes & AI tools
-        </p>
+        <span className="text-xs font-mono opacity-50 uppercase tracking-[0.2em]">
+          All Works ({filteredProjects.length})
+        </span>
       </div>
 
       {/* Interactive Filter Strip */}
-      <div className="pt-6 pb-8">
+      <div className="pt-8 pb-8">
         <CatalogueFilters
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
@@ -85,11 +78,11 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
         />
       </div>
 
-      {/* Directory Table / Specimen Cards */}
+      {/* Directory Table / Rows */}
       <div className="border-t border-current/10 divide-y divide-current/10">
         {filteredProjects.length === 0 ? (
-          <div className="py-16 text-center space-y-3 font-mono text-sm opacity-60">
-            <p>No specimens found matching current filter query.</p>
+          <div className="py-20 text-center space-y-3 font-mono text-sm opacity-60">
+            <p>No projects found matching current filter query.</p>
             <button
               onClick={() => {
                 setSelectedCategory('All');
@@ -97,7 +90,7 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
               }}
               className="text-xs uppercase tracking-wider underline cursor-pointer text-[#8B5CF6]"
             >
-              Reset filter criteria
+              Reset filter
             </button>
           </div>
         ) : (
@@ -108,52 +101,48 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
             return (
               <div
                 key={p.slug}
-                className={`group py-6 transition-colors duration-200 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center ${
-                  isDark ? 'hover:bg-[#0c0628]/40' : 'hover:bg-[#ECEADE]/40'
-                }`}
+                className="group py-6 sm:py-7 transition-colors duration-200 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center hover:opacity-90"
               >
-                {/* Plate Number & Status */}
-                <div className="md:col-span-2 flex items-baseline gap-3 font-mono text-xs">
-                  <span className="font-serif text-2xl opacity-40 font-light">
+                {/* Plate Number & Year */}
+                <div className="md:col-span-2 flex items-baseline gap-3 font-mono text-xs opacity-50">
+                  <span className="text-sm font-normal">
                     {p.number}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 opacity-80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span className="text-[11px] lowercase">{p.status}</span>
-                  </span>
+                  <span>/</span>
+                  <span>{p.year}</span>
                 </div>
 
                 {/* Title & One-line Summary */}
                 <div className="md:col-span-5 space-y-1">
                   <Link
                     to={`/projects/${p.slug}`}
-                    className="font-serif text-xl sm:text-2xl font-light lowercase group-hover:italic transition-all duration-200 block text-current"
+                    className="font-serif text-xl sm:text-2xl lg:text-[26px] font-light lowercase transition-opacity block text-current group-hover:opacity-75"
                   >
                     {localizedTitle}
                   </Link>
-                  <p className="text-xs opacity-70 font-sans line-clamp-1 font-light">
+                  <p className="text-xs sm:text-sm opacity-65 font-sans line-clamp-1 font-light">
                     {localizedSummary}
                   </p>
                 </div>
 
                 {/* Category & Tools */}
-                <div className="md:col-span-3 font-mono text-xs opacity-75">
-                  <div className="text-[11px] uppercase tracking-wider text-[#8B5CF6] font-semibold mb-0.5">
+                <div className="md:col-span-3 font-mono text-xs opacity-60">
+                  <div className="uppercase tracking-wider text-[11px] mb-0.5">
                     {p.category} · {p.type}
                   </div>
-                  <div className="text-[11px] opacity-65 truncate">
+                  <div className="text-[11px] opacity-60 truncate">
                     {p.tools.slice(0, 3).join(' · ')}
                   </div>
                 </div>
 
                 {/* Direct Actions */}
-                <div className="md:col-span-2 flex items-center justify-start md:justify-end gap-3 font-mono text-xs">
+                <div className="md:col-span-2 flex items-center justify-start md:justify-end gap-4 font-mono text-xs">
                   {p.demo && (
                     <a
                       href={p.demo}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="p-1.5 hover:text-[#8B5CF6] transition-colors"
+                      className="opacity-50 hover:opacity-100 transition-opacity"
                       title="Launch live deployment"
                       aria-label={`Launch ${localizedTitle}`}
                     >
@@ -165,7 +154,7 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
                       href={p.github}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="p-1.5 hover:text-[#8B5CF6] transition-colors"
+                      className="opacity-50 hover:opacity-100 transition-opacity"
                       title="View GitHub repository"
                       aria-label={`GitHub repo for ${localizedTitle}`}
                     >
@@ -174,13 +163,9 @@ export const ArchiveIndex: React.FC<ArchiveIndexProps> = ({ projects }) => {
                   )}
                   <Link
                     to={`/projects/${p.slug}`}
-                    className={`inline-flex items-center gap-1 px-3 py-1 text-[11px] uppercase tracking-wider font-medium border rounded-xs transition-colors ${
-                      isDark
-                        ? 'border-violet-800 hover:bg-violet-600 hover:text-[#030014] text-violet-300'
-                        : 'border-[#171717] hover:bg-[#171717] hover:text-[#FAF9F5] text-[#171717]'
-                    }`}
+                    className="inline-flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity uppercase tracking-wider text-[11px] font-mono font-medium"
                   >
-                    <span>view</span>
+                    <span>View</span>
                     <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </Link>
                 </div>
