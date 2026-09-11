@@ -19,70 +19,64 @@ export const CataloguePage: React.FC<CataloguePageProps> = ({ onOpenStatement })
   const isDark = mode === 'dark';
 
   usePageMeta({
-    title: `Rocky Babcock — Project Archive`,
-    description: 'Cinematic creative technology portfolio and project archive for Rocky Babcock — AI agents, Web3, and experimental systems.',
+    title: `Rocky Babcock — Selected Projects & Systems Archive`,
+    description:
+      'Cinematic creative technology portfolio, spatial web engines, AI interface prototypes, and systems archive by Rocky Babcock.',
   });
 
-  const selectedWorkRef = useRef<HTMLDivElement>(null);
+  const sequenceRef = useRef<HTMLDivElement>(null);
 
-  const scrollToSelectedWork = () => {
-    selectedWorkRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSequence = () => {
+    sequenceRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Flagship projects for Selected Work hierarchy
+  // Flagship projects for the Scene Sequence (01, 02, 03)
   const featuredProject = projectsData.find((p) => p.featured) || projectsData[0];
   const secondaryProjects = projectsData.filter((p) => p.slug !== featuredProject.slug);
 
   return (
     <div className="w-full relative transition-colors duration-300">
-      {/* =========================================================================
-          01. ENTRANCE: Catalogue Hero + Typographic Marquee
-          ========================================================================= */}
+      {/* Floating Project Sequence Rail / Index Instrument */}
+      <ProjectRail projects={[featuredProject, ...secondaryProjects]} />
+
+      {/* =======================================================================
+          SCENE 01 — INTRO HERO (Full-Screen Experience, Min 100vh)
+          Huge display type, overlapping 3D media, technical geometry, watercolor
+          ======================================================================= */}
       <CatalogueHero
-        onScrollToArchive={scrollToSelectedWork}
+        onScrollToArchive={scrollToSequence}
         onOpenStatement={onOpenStatement}
       />
 
-      <TypographicMarquee />
-
-      {/* Persistent Exhibition Index Rail (Desktop: 01 / project, Mobile: 01 / 03) */}
-      <ProjectRail projects={[featuredProject, ...secondaryProjects]} />
-
-      {/* =========================================================================
-          02. SELECTED WORK: Flagship & Secondary Projects
-          ========================================================================= */}
-      <section
-        id="selected-work"
-        ref={selectedWorkRef}
-        className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 pt-20 sm:pt-28 pb-16"
-      >
-        {/* Section Header: Minimal & Confident */}
-        <div className="flex items-baseline justify-between pb-8 border-b border-current/10">
-          <div>
-            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-[-0.03em] lowercase">
-              selected work<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
-            </h2>
-          </div>
-          <span className="text-xs font-mono opacity-50 uppercase tracking-[0.2em]">
-            01 — {String(projectsData.length).padStart(2, '0')}
-          </span>
-        </div>
-
-        {/* 1. FEATURED PROJECT */}
+      {/* =======================================================================
+          SCENES 02, 03, 04 — PINNED STICKY PROJECT SEQUENCE
+          Full-viewport scenes with depth stacking: Project 01 -> Project 02 -> Project 03
+          No bounding card boxes. Edge-to-edge spatial environments.
+          ======================================================================= */}
+      <main ref={sequenceRef} id="project-sequence" className="relative w-full">
+        {/* SCENE 02 — PROJECT 01: SVG Downloader (DATA / SYSTEM SCENE) */}
         <FeaturedProject project={featuredProject} />
 
-        {/* 2. SECONDARY PROJECTS (Spacious 2-Column Grid) */}
+        {/* SCENE 03 — PROJECT 02: rockyhomepage3D (SPATIAL 3D SCENE)
+            SCENE 04 — PROJECT 03: melius-like (AI / SELECTION / ROTATION SCENE) */}
         <ProjectGrid projects={secondaryProjects} />
+      </main>
+
+      {/* Kinetic Typographic Divider: Bridging the flagship trilogy to the complete archive */}
+      <div className="relative py-8 sm:py-12 overflow-hidden border-y border-current/10">
+        <TypographicMarquee />
+      </div>
+
+      {/* =======================================================================
+          SCENE 05 — ARCHIVE INDEX: Complete Directory with Typographic Scaling & Hover
+          ======================================================================= */}
+      <section id="scene-05-archive" className="relative w-full">
+        <ArchiveIndex projects={projectsData} />
       </section>
 
-      {/* =========================================================================
-          03. COMPLETE DIRECTORY: Exhibition Catalogue Index with Search & Filters
-          ========================================================================= */}
-      <ArchiveIndex projects={projectsData} />
-
-      {/* =========================================================================
-          04. TECHNICAL INDEX: Frontend, 3D, AI, Tools Colophon
-          ========================================================================= */}
+      {/* =======================================================================
+          SCENE 06 — TECHNICAL CLIMAX: Full Architectural Circuit & Subsystem Climax
+          ======================================================================= */}
       <TechnicalIndex />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
-import { Terminal, Cpu, Layers, GitBranch, Sparkles, Activity, CheckCircle2, Box, Zap, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Activity, Zap, Cpu, Layers, GitBranch, Sparkles } from 'lucide-react';
+import { WatercolorPigmentField } from './WatercolorPigmentField';
 
 interface TechNode {
   id: string;
@@ -21,7 +22,7 @@ export const TechnicalIndex: React.FC = () => {
     {
       id: 'react',
       name: 'REACT 19',
-      role: 'Declarative UI & Concurrent Fiber',
+      role: 'Declarative UI & Concurrent Fiber Architecture',
       category: 'CORE',
       spec: 'React 19.0.1 · Concurrent hooks, Action transitions, zero-waterfall UI pipelines',
       status: 'VERIFIED RUNTIME',
@@ -87,74 +88,124 @@ export const TechnicalIndex: React.FC = () => {
 
   return (
     <section
-      id="technical-index"
-      className={`relative py-24 sm:py-36 border-t transition-colors duration-500 overflow-hidden ${
+      id="scene-06-technical-climax"
+      className={`relative min-h-screen py-24 sm:py-36 border-t transition-colors duration-500 overflow-hidden select-none ${
         isDark
           ? 'border-violet-950/40 bg-[#02000A] text-[#F5F3EF]'
           : 'border-[#E2DFD2] bg-[#F7F5EE] text-[#171717]'
       }`}
     >
-      {/* Background Matrix Grid */}
-      <div className="absolute inset-0 pointer-events-none opacity-25">
+      {/* =======================================================================
+          SCENE 06 — LAYER 1: Large Rainbow Watercolor Pigment Field
+          Blooming behind the live circuit architecture
+          ======================================================================= */}
+      <WatercolorPigmentField
+        variant="rainbow"
+        size="hero"
+        intensity="vibrant"
+        blur="deep"
+        className="top-[10%] left-[10%]"
+      />
+
+      {/* =======================================================================
+          SCENE 06 — LAYER 2: Live Animated SVG Circuit Bus & Signal Nodes
+          ======================================================================= */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        <svg className="w-full h-full absolute inset-0 opacity-30">
+          <defs>
+            <linearGradient id="bus-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#10B981" stopOpacity="0.8" />
+            </linearGradient>
+          </defs>
+
+          {/* High-speed architectural bus lines */}
+          <path
+            d="M 0,220 C 400,220 500,420 960,420 S 1400,300 1920,300"
+            fill="none"
+            stroke="url(#bus-glow)"
+            strokeWidth="1.5"
+            strokeDasharray="8 10"
+          />
+          <path
+            d="M 0,720 C 600,720 700,520 1100,520 S 1600,660 1920,660"
+            fill="none"
+            stroke={isDark ? '#A78BFA' : '#7C3AED'}
+            strokeWidth="1.2"
+            strokeDasharray="6 8"
+          />
+
+          {/* Real-time moving signal particles */}
+          <circle cx="960" cy="420" r="5" fill="#38BDF8" className="animate-ping" />
+          <circle cx="1100" cy="520" r="4" fill="#10B981" />
+        </svg>
+
+        {/* Dynamic Coordinate Matrix */}
         <div
-          className="w-full h-full"
+          className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: isDark
-              ? 'radial-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px)'
+              ? 'radial-gradient(rgba(139, 92, 246, 0.35) 1px, transparent 1px)'
               : 'radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px)',
-            backgroundSize: '36px 36px',
+            backgroundSize: '40px 40px',
           }}
         />
       </div>
 
       <div className="relative max-w-[1560px] mx-auto px-6 sm:px-10 lg:px-16 z-10 space-y-16">
-        {/* Section Header: Bold Monumental Architecture Header */}
+        {/* Architectural Climax Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-current/15">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.26em] opacity-60">
               <span className="w-2 h-2 rounded-full bg-violet-500 animate-ping" />
-              <span>COLOPHON // TECHNICAL SYSTEM ARCHITECTURE</span>
+              <span>SCENE 06 // SYSTEM ARCHITECTURE & RUNTIME CLIMAX</span>
             </div>
-            <h2 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-light tracking-[-0.04em] lowercase">
-              technical system<span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
+            <h2 className="font-serif text-[clamp(48px,7vw,110px)] font-light leading-[0.88] tracking-[-0.04em] lowercase">
+              system architecture
+              <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
             </h2>
           </div>
 
           <div className="font-mono text-xs opacity-75 space-y-1 sm:text-right">
             <div className="flex items-center sm:justify-end gap-2 text-emerald-400 font-semibold">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>RUNTIME SPEC: 100% PRODUCTION HARDENED</span>
+              <span>SPECIFICATION: 100% PRODUCTION HARDENED</span>
             </div>
-            <div className="opacity-50">ESM NATIVE // VITE + TYPESCRIPT 5.8</div>
+            <div className="opacity-50">ESM NATIVE // VITE 6 + TYPESCRIPT 5.8 + REACT 19</div>
           </div>
         </div>
 
-        {/* Visual Climax: Interactive Architecture Node Matrix */}
+        {/* Live Interactive Node Matrix */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Interactive Node Graph (Col 1-8) */}
+          {/* Left: Architecture Nodes (Col 1-8) */}
           <div className="lg:col-span-8 space-y-4">
             <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-wider opacity-60 pb-2">
-              <span>CORE ARCHITECTURE NODES (SELECT TO INSPECT)</span>
-              <span>7 RUNTIMES</span>
+              <span>CORE RUNTIME NODES (CLICK TO INSPECT CIRCUIT)</span>
+              <span>7 SUBSYSTEMS</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {nodes.map((node) => {
                 const isSelected = selectedNodeId === node.id;
-                const isConnected = activeNode.connectedTo.includes(node.id) || node.connectedTo.includes(activeNode.id);
+                const isConnected =
+                  activeNode.connectedTo.includes(node.id) ||
+                  node.connectedTo.includes(activeNode.id);
+
                 return (
                   <button
                     key={node.id}
                     onClick={() => setSelectedNodeId(node.id)}
+                    data-cursor="EXAMINE"
                     className={`text-left p-4 sm:p-5 rounded-xs border transition-all duration-300 cursor-pointer relative overflow-hidden ${
                       isSelected
                         ? isDark
-                          ? 'bg-violet-950/60 border-violet-400 text-white shadow-[0_0_30px_rgba(139,92,246,0.35)] translate-y-[-2px]'
-                          : 'bg-black/5 border-[#171717] text-[#171717] shadow-[0_4px_20px_rgba(0,0,0,0.06)] translate-y-[-2px]'
+                          ? 'bg-violet-950/70 border-violet-400 text-white shadow-[0_0_35px_rgba(139,92,246,0.4)] translate-y-[-2px]'
+                          : 'bg-black/5 border-[#171717] text-[#171717] shadow-[0_4px_20px_rgba(0,0,0,0.08)] translate-y-[-2px]'
                         : isConnected
                         ? isDark
-                          ? 'bg-violet-950/20 border-violet-800/60 text-violet-200'
-                          : 'bg-neutral-100/50 border-neutral-300 text-neutral-800'
+                          ? 'bg-violet-950/25 border-violet-800/60 text-violet-200'
+                          : 'bg-neutral-100/60 border-neutral-300 text-neutral-800'
                         : isDark
                         ? 'bg-[#0b0520]/60 border-violet-950/40 text-violet-300/60 hover:border-violet-800/60'
                         : 'bg-white/40 border-black/10 text-neutral-600 hover:border-black/30'
@@ -181,19 +232,25 @@ export const TechnicalIndex: React.FC = () => {
               })}
             </div>
 
-            {/* Real-Time Animated Data Pipeline Trace Line */}
+            {/* Pipeline Trace Indicator */}
             <div
               className={`p-4 rounded-xs border font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 ${
-                isDark ? 'bg-violet-950/20 border-violet-900/40' : 'bg-black/[0.02] border-black/10'
+                isDark
+                  ? 'bg-violet-950/20 border-violet-900/40'
+                  : 'bg-black/[0.02] border-black/10'
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="text-[10px] uppercase tracking-wider text-violet-400 font-bold">PIPELINE BUS:</span>
-                <span className="opacity-70 text-[11px]">Dispatch → Virtual DOM → WebGL Draw Call → Response</span>
+                <span className="text-[10px] uppercase tracking-wider text-violet-400 font-bold">
+                  PIPELINE BUS:
+                </span>
+                <span className="opacity-70 text-[11px]">
+                  React 19 Concurrent Root → Motion Kinetics → WebGL Draw Pass → Verified Output
+                </span>
               </div>
               <div className="flex items-center gap-2 text-[10px] opacity-60">
                 <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-                <span>ALL SUBSYSTEMS GREEN</span>
+                <span>ACTIVE CLUSTER 100%</span>
               </div>
             </div>
           </div>
@@ -207,7 +264,9 @@ export const TechnicalIndex: React.FC = () => {
             }`}
           >
             <div className="flex items-center justify-between pb-4 border-b border-current/15">
-              <span className="text-[10px] uppercase tracking-[0.24em] text-violet-400 font-bold">NODE TELEMETRY</span>
+              <span className="text-[10px] uppercase tracking-[0.24em] text-violet-400 font-bold">
+                NODE TELEMETRY
+              </span>
               <span className="text-[10px] uppercase px-2 py-0.5 rounded-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 {activeNode.status}
               </span>
@@ -223,14 +282,18 @@ export const TechnicalIndex: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs pt-2">
-              <div className="text-[10px] uppercase tracking-widest opacity-50">ENGINEERING SPECIFICATION:</div>
+              <div className="text-[10px] uppercase tracking-widest opacity-50">
+                ENGINEERING SPECIFICATION:
+              </div>
               <div className="p-3 rounded-xs bg-current/5 border border-current/10 text-[11px] leading-relaxed opacity-90">
                 {activeNode.spec}
               </div>
             </div>
 
             <div className="space-y-2 text-xs pt-2">
-              <div className="text-[10px] uppercase tracking-widest opacity-50">GRAPH CONNECTIONS:</div>
+              <div className="text-[10px] uppercase tracking-widest opacity-50">
+                ACTIVE GRAPH CONNECTIONS:
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeNode.connectedTo.map((targetId) => {
                   const targetNode = nodes.find((n) => n.id === targetId);
@@ -238,6 +301,7 @@ export const TechnicalIndex: React.FC = () => {
                     <button
                       key={targetId}
                       onClick={() => setSelectedNodeId(targetId)}
+                      data-cursor="EXAMINE"
                       className="px-2.5 py-1 rounded-xs bg-violet-500/15 border border-violet-500/30 text-violet-400 hover:bg-violet-500/30 text-[10px] uppercase font-semibold cursor-pointer transition-colors"
                     >
                       → {targetNode?.name || targetId}
