@@ -1,14 +1,15 @@
 import React from 'react';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
+import { TechnicalAtmosphere } from './TechnicalAtmosphere';
 
 /**
- * Layered Atmospheric Background (5 Physical & Digital Layers)
+ * Layered Atmospheric Background (6 Physical & Digital Layers)
  *
  * Layer 1: Base surface (Light: warm paper #F5F4ED / Dark: #030014 deep violet-black)
  * Layer 2: Cinematic fine grain (fractal noise procedural shader, calibrated for light and dark)
  * Layer 3: Subtle atmospheric tonal field (Light: gallery daylight + sky blue / Dark: cosmic violet & deep indigo)
  * Layer 4: Organic pigment / watercolor bleed at document margins
- * Layer 5: Subtle technical calibration texture (laboratory hairline grid ticks and coordinates)
+ * Layer 5: Interactive Technical Atmosphere (orbital telemetry, coordinates, mouse-reactive glow)
  */
 export const AtmosphericBackground: React.FC = () => {
   const { mode } = useSurfaceMode();
@@ -19,6 +20,7 @@ export const AtmosphericBackground: React.FC = () => {
       className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden transition-colors duration-700"
       aria-hidden="true"
     >
+      <TechnicalAtmosphere />
       {/* Layer 1: Procedural High-Density Film Grain */}
       <svg
         className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${

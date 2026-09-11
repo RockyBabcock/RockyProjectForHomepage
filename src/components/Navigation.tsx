@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowUpRight, Menu, X, Sun, Moon, Search } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sun, Moon, Search, Terminal, Sparkles } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -12,6 +12,7 @@ interface NavigationProps {
 
 export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenCommand }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
   const { t } = useLanguage();
@@ -24,9 +25,11 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 30);
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (totalHeight > 0) {
-        setScrollProgress((window.scrollY / totalHeight) * 100);
+        setScrollProgress((scrollY / totalHeight) * 100);
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -34,77 +37,83 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-40 w-full transition-colors duration-300 ${
-        isDark
-          ? 'bg-[#030014]/85 text-[#F5F3EF]'
-          : 'bg-[#F5F4ED]/85 text-[#171717]'
-      } backdrop-blur-md border-b ${isDark ? 'border-violet-950/30' : 'border-[#E2DFD2]/60'}`}
-    >
-      <div className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
-        {/* Left: Minimal studio logo / brand */}
-        <div className="flex items-baseline gap-4">
+    <header className="sticky top-0 z-40 w-full transition-all duration-500 px-4 sm:px-8 py-3">
+      {/* Dynamic Floating Morphing Glass Frame */}
+      <div
+        className={`mx-auto transition-all duration-500 ${
+          isScrolled
+            ? isDark
+              ? 'max-w-[1320px] rounded-full bg-[#08021c]/80 backdrop-blur-2xl border border-violet-600/40 shadow-[0_20px_60px_-10px_rgba(124,58,237,0.35)] px-6 sm:px-8 h-16 text-[#F5F3EF]'
+              : 'max-w-[1320px] rounded-full bg-[#FAF9F5]/85 backdrop-blur-2xl border border-[#D8D4C5] shadow-[0_20px_50px_-10px_rgba(30,20,50,0.12)] px-6 sm:px-8 h-16 text-[#171717]'
+            : isDark
+            ? 'max-w-[1560px] bg-transparent border-b border-violet-950/40 px-2 sm:px-4 h-20 text-[#F5F3EF]'
+            : 'max-w-[1560px] bg-transparent border-b border-[#E2DFD2]/70 px-2 sm:px-4 h-20 text-[#171717]'
+        } flex items-center justify-between`}
+      >
+        {/* Left: Studio Identity & Telemetry Node */}
+        <div className="flex items-center gap-4">
           <Link
             to="/"
-            className="group inline-flex items-baseline gap-2.5 tracking-[-0.03em] select-none"
+            className="group inline-flex items-center gap-2.5 select-none"
             aria-label="Rocky Babcock — Studio"
           >
-            <span className="font-serif text-2xl sm:text-[26px] font-normal tracking-[-0.02em] transition-colors group-hover:opacity-75">
+            <span className="w-2 h-2 rounded-full bg-violet-500 animate-ping shrink-0" />
+            <span className="font-serif text-2xl sm:text-[25px] font-normal tracking-[-0.02em] transition-opacity group-hover:opacity-75">
               Rocky Babcock
             </span>
-            <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.22em] opacity-35">
-              Studio
+            <span className="hidden sm:inline font-mono text-[9px] uppercase tracking-[0.24em] opacity-45 px-1.5 py-0.5 rounded-xs bg-current/5">
+              STUDIO
             </span>
           </Link>
         </div>
 
-        {/* Right: Editorial Studio Navigation */}
+        {/* Center/Right: Cinematic Navigation Links */}
         <nav
           aria-label="Main Navigation"
-          className="hidden md:flex items-center gap-8 lg:gap-10 text-[12px] uppercase tracking-[0.22em] font-mono"
+          className="hidden md:flex items-center gap-8 lg:gap-10 text-[11px] uppercase tracking-[0.22em] font-mono"
         >
           <Link
             to="/"
             aria-current={isWorkActive ? 'page' : undefined}
-            className={`transition-all duration-200 py-1 relative ${
+            className={`transition-all duration-300 py-1 relative ${
               isWorkActive
-                ? 'text-current font-medium'
+                ? 'text-current font-bold'
                 : 'opacity-55 hover:opacity-100'
             }`}
           >
             <span>Work</span>
             {isWorkActive && (
-              <span className={`absolute -bottom-1 left-0 w-full h-[1px] ${isDark ? 'bg-violet-400' : 'bg-[#171717]'}`} />
+              <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-violet-400" />
             )}
           </Link>
 
           <Link
             to="/archive"
             aria-current={isArchiveActive ? 'page' : undefined}
-            className={`transition-all duration-200 py-1 relative ${
+            className={`transition-all duration-300 py-1 relative ${
               isArchiveActive
-                ? 'text-current font-medium'
+                ? 'text-current font-bold'
                 : 'opacity-55 hover:opacity-100'
             }`}
           >
             <span>Archive</span>
             {isArchiveActive && (
-              <span className={`absolute -bottom-1 left-0 w-full h-[1px] ${isDark ? 'bg-violet-400' : 'bg-[#171717]'}`} />
+              <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-violet-400" />
             )}
           </Link>
 
           <Link
             to="/experiments"
             aria-current={isLabsActive ? 'page' : undefined}
-            className={`transition-all duration-200 py-1 relative ${
+            className={`transition-all duration-300 py-1 relative ${
               isLabsActive
-                ? 'text-current font-medium'
+                ? 'text-current font-bold'
                 : 'opacity-55 hover:opacity-100'
             }`}
           >
             <span>Labs</span>
             {isLabsActive && (
-              <span className={`absolute -bottom-1 left-0 w-full h-[1px] ${isDark ? 'bg-violet-400' : 'bg-[#171717]'}`} />
+              <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-violet-400" />
             )}
           </Link>
 
@@ -117,142 +126,123 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
             </button>
           )}
 
-          {/* Secondary Controls: subtle dividers, un-boxed */}
-          <div className="flex items-center gap-6 pl-4 border-l border-current/10">
-            {/* Mode Switcher: text / clean icon */}
+          {/* Interactive Tool Control Strip */}
+          <div className="flex items-center gap-5 pl-5 border-l border-current/15">
+            {/* Command Palette Trigger */}
+            {onOpenCommand && (
+              <button
+                onClick={onOpenCommand}
+                className="opacity-65 hover:opacity-100 transition-all cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/50 text-[10px]"
+                title="Open Command Palette (⌘K)"
+                aria-label="Open Command Palette"
+              >
+                <Terminal className="w-3 h-3 text-violet-400" />
+                <span className="hidden lg:inline text-violet-300 font-semibold">CMD</span>
+                <kbd className="text-[9px] opacity-75 font-mono px-1 py-0.2 bg-black/20 rounded">⌘K</kbd>
+              </button>
+            )}
+
+            {/* Surface Mode Toggle */}
             <button
               onClick={toggleMode}
-              className="opacity-60 hover:opacity-100 transition-opacity inline-flex items-center gap-2 cursor-pointer text-[11px] tracking-[0.2em]"
-              title={`Switch to ${isDark ? 'Paper (Light)' : 'Studio (Dark)'} surface`}
+              className="opacity-65 hover:opacity-100 transition-opacity inline-flex items-center gap-2 cursor-pointer text-[10px] tracking-[0.2em]"
+              title={`Switch to ${isDark ? 'Paper (Light Canvas)' : 'Studio (Lab Violet)'} surface`}
             >
               {isDark ? (
                 <>
                   <Moon className="w-3.5 h-3.5 text-violet-400" />
-                  <span className="hidden lg:inline">Studio</span>
+                  <span className="hidden xl:inline">Studio</span>
                 </>
               ) : (
                 <>
                   <Sun className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                  <span className="hidden lg:inline">Paper</span>
+                  <span className="hidden xl:inline">Paper</span>
                 </>
               )}
             </button>
 
             {/* Language Switcher */}
-            <div className="opacity-75 hover:opacity-100 transition-opacity">
-              <LanguageSwitcher />
-            </div>
-
-            {/* Subtle Command Palette hint */}
-            {onOpenCommand && (
-              <button
-                onClick={onOpenCommand}
-                className="opacity-45 hover:opacity-90 transition-opacity inline-flex items-center gap-1.5 cursor-pointer text-[11px]"
-                title="Search (⌘K or /)"
-                aria-label="Open command palette"
-              >
-                <Search className="w-3.5 h-3.5" />
-                <span className="text-[10px] opacity-70">⌘K</span>
-              </button>
-            )}
+            <LanguageSwitcher />
           </div>
         </nav>
 
-        {/* Mobile controls */}
-        <div className="flex md:hidden items-center gap-3 font-mono">
+        {/* Mobile Action Controls */}
+        <div className="flex md:hidden items-center gap-3">
           {onOpenCommand && (
             <button
               onClick={onOpenCommand}
-              className="p-2 opacity-70 hover:opacity-100 cursor-pointer"
-              aria-label="Search"
+              className="p-2 opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="Open command palette"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 text-violet-400" />
             </button>
           )}
 
           <button
             onClick={toggleMode}
-            className="p-2 opacity-70 hover:opacity-100 cursor-pointer"
-            aria-label="Toggle mode"
+            className="p-2 opacity-70 hover:opacity-100 transition-opacity"
+            aria-label="Toggle dark and light surface mode"
           >
             {isDark ? <Moon className="w-4 h-4 text-violet-400" /> : <Sun className="w-4 h-4 text-[#8B5CF6]" />}
           </button>
 
-          <LanguageSwitcher />
-
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-current opacity-80 hover:opacity-100 focus:outline-none cursor-pointer"
-            aria-label="Toggle navigation"
+            className="p-2 opacity-75 hover:opacity-100 transition-opacity"
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Subtle Scroll Progress Indicator at header base */}
-      <div className="absolute bottom-0 left-0 h-[1.5px] w-full bg-transparent overflow-hidden pointer-events-none">
-        <div
-          className={`h-full transition-[width] duration-150 ease-out ${
-            isDark ? 'bg-gradient-to-r from-violet-600 to-indigo-400' : 'bg-gradient-to-r from-[#171717] to-[#8B5CF6]'
-          }`}
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
-
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div
-          className={`md:hidden border-b px-6 py-6 space-y-5 transition-colors ${
-            isDark ? 'bg-[#08041c] border-violet-950/40 text-[#F5F3EF]' : 'bg-[#FAF9F5] border-[#E2DFD2] text-[#171717]'
+          className={`md:hidden mt-2 p-6 rounded-sm border shadow-2xl space-y-6 transition-all font-mono text-sm uppercase tracking-widest ${
+            isDark
+              ? 'bg-[#0a0520] border-violet-900/60 text-[#F5F3EF]'
+              : 'bg-[#FAF9F5] border-[#E2DFD2] text-[#171717]'
           }`}
         >
-          <div className="flex flex-col gap-4 text-sm font-mono uppercase tracking-[0.2em]">
+          <div className="flex flex-col space-y-4">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={`py-1 ${isWorkActive ? 'font-semibold text-current' : 'opacity-70'}`}
+              className={`py-1 ${isWorkActive ? 'text-violet-400 font-bold' : 'opacity-70'}`}
             >
               Work
             </Link>
-
             <Link
               to="/archive"
               onClick={() => setMobileMenuOpen(false)}
-              className={`py-1 ${isArchiveActive ? 'font-semibold text-current' : 'opacity-70'}`}
+              className={`py-1 ${isArchiveActive ? 'text-violet-400 font-bold' : 'opacity-70'}`}
             >
               Archive
             </Link>
-
             <Link
               to="/experiments"
               onClick={() => setMobileMenuOpen(false)}
-              className={`py-1 ${isLabsActive ? 'font-semibold text-current' : 'opacity-70'}`}
+              className={`py-1 ${isLabsActive ? 'text-violet-400 font-bold' : 'opacity-70'}`}
             >
               Labs
             </Link>
-
             {onOpenStatement && (
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenStatement();
                 }}
-                className="py-1 text-left opacity-70 hover:opacity-100 cursor-pointer"
+                className="text-left py-1 opacity-70"
               >
                 {t.nav.about}
               </button>
             )}
+          </div>
 
-            <a
-              href="https://github.com/rockybuildingaiweb3-boop/RockyBlogForHomePage"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-1 opacity-70 hover:opacity-100 inline-flex items-center gap-1.5"
-            >
-              <span>Notes</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-            </a>
+          <div className="pt-4 border-t border-current/10 flex items-center justify-between">
+            <span className="text-xs opacity-50">LANGUAGE</span>
+            <LanguageSwitcher />
           </div>
         </div>
       )}
