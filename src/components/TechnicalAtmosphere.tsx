@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
+import { useProjectAtmosphere } from '../context/ProjectAtmosphereContext';
 
 export const TechnicalAtmosphere: React.FC = () => {
   const { mode } = useSurfaceMode();
   const isDark = mode === 'dark';
   const location = useLocation();
+  const { atmosphereMood } = useProjectAtmosphere();
 
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isFinePointer, setIsFinePointer] = useState(false);
@@ -21,24 +23,24 @@ export const TechnicalAtmosphere: React.FC = () => {
   const networkLayerRef = useRef<HTMLDivElement>(null);
   const cursorGlowRef = useRef<HTMLDivElement>(null);
 
-  // Determine contextual palette accent from current route or scroll section
+  // Determine contextual palette accent from current project mood or route
   const path = location.pathname.toLowerCase();
-  const isSvg = path.includes('svg');
-  const is3D = path.includes('3d') || path.includes('rockyhomepage');
-  const isAI = path.includes('ai') || path.includes('melius');
+  const isSvg = atmosphereMood === 'network' || path.includes('svg');
+  const is3D = atmosphereMood === 'spatial' || path.includes('3d') || path.includes('rockyhomepage');
+  const isAI = atmosphereMood === 'circular' || path.includes('ai') || path.includes('melius');
 
   const accentColor = isSvg
     ? isDark
       ? '#38BDF8'
-      : '#0284C7' // Cool blue
+      : '#0284C7' // Cool cyan/blue for Project 01 (Network/Data)
     : isAI
     ? isDark
       ? '#F472B6'
-      : '#DB2777' // Soft magenta
+      : '#DB2777' // Soft magenta/pink for Project 03 (Circular/AI)
     : is3D
     ? isDark
       ? '#818CF8'
-      : '#4F46E5' // Indigo
+      : '#4F46E5' // Indigo for Project 02 (Spatial/3D)
     : isDark
     ? '#A78BFA'
     : '#7C3AED'; // Default violet
@@ -176,7 +178,12 @@ export const TechnicalAtmosphere: React.FC = () => {
       {/* =========================================================================
           LAYER 2: Thin Concentric Orbital Geometry (Mathematical Radii & Ticks)
           ========================================================================= */}
-      <div ref={orbitLayerRef} className="absolute inset-0 pointer-events-none will-change-transform">
+      <div
+        ref={orbitLayerRef}
+        className={`absolute inset-0 pointer-events-none will-change-transform transition-opacity duration-700 ${
+          isAI ? 'opacity-90' : 'opacity-25'
+        }`}
+      >
         {/* Upper-Right Orbital Structure */}
         <div className="absolute -top-[12%] -right-[8%] w-[850px] lg:w-[1100px] h-[850px] lg:h-[1100px] opacity-[0.24] transition-opacity duration-700">
           <svg
@@ -228,7 +235,12 @@ export const TechnicalAtmosphere: React.FC = () => {
       {/* =========================================================================
           LAYER 3: Technical Line Network & Live Travelling Signal Trajectories
           ========================================================================= */}
-      <div ref={networkLayerRef} className="absolute inset-0 pointer-events-none will-change-transform">
+      <div
+        ref={networkLayerRef}
+        className={`absolute inset-0 pointer-events-none will-change-transform transition-opacity duration-700 ${
+          isSvg ? 'opacity-95' : 'opacity-35'
+        }`}
+      >
         <svg
           className="w-full h-full absolute inset-0"
           xmlns="http://www.w3.org/2000/svg"

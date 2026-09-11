@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { SurfaceModeProvider, useSurfaceMode } from './context/SurfaceModeContext';
+import { ProjectAtmosphereProvider } from './context/ProjectAtmosphereContext';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { CuratorialDrawer } from './components/CuratorialDrawer';
@@ -138,7 +139,9 @@ export default function App() {
     <SurfaceModeProvider>
       <LanguageProvider>
         <Router>
-          <AppContent />
+          <ProjectAtmosphereProvider>
+            <AppContent />
+          </ProjectAtmosphereProvider>
         </Router>
       </LanguageProvider>
     </SurfaceModeProvider>

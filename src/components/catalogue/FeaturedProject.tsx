@@ -1,514 +1,347 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowUpRight, Github, ExternalLink, ChevronDown, ChevronUp, Cpu, Terminal, Sparkles } from 'lucide-react';
+import { ArrowUpRight, ExternalLink, Github } from 'lucide-react';
 import { Project } from '../../types';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useSurfaceMode } from '../../context/SurfaceModeContext';
+import { useProjectAtmosphere } from '../../context/ProjectAtmosphereContext';
 import { ProjectMediaFrame } from '../ProjectMediaFrame';
-import { WatercolorStain } from '../WatercolorStain';
-import { MagneticLink } from '../MagneticLink';
-import { ProjectArchitectureDiagram } from '../ProjectArchitectureDiagram';
 
 interface FeaturedProjectProps {
   project: Project;
 }
 
 export const FeaturedProject: React.FC<FeaturedProjectProps> = ({ project }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [showTopology, setShowTopology] = useState(false);
   const { localizeText } = useLanguage();
   const { mode } = useSurfaceMode();
   const isDark = mode === 'dark';
+  const { setActiveSlug } = useProjectAtmosphere();
   const navigate = useNavigate();
 
   const title = localizeText(project.title);
   const summary = localizeText(project.summary);
-  const description = localizeText(project.description);
 
-  // Section reference for sticky & scroll tracking
-  const sceneRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
 
   // ---------------------------------------------------------------------------
-  // Smooth Interpolated Cursor Tracking (Subtle perspective & plane shifts)
+  // Pointer-Driven Perspective Tilt (Strict limit: Max 2.8 deg, 8–14px shift)
   // ---------------------------------------------------------------------------
+  const [isHovered, setIsHovered] = useState(false);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const targetCursor = useRef({ x: 0, y: 0 });
-  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
     const isFine = window.matchMedia('(pointer: fine)').matches;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!isFine || prefersReduced) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const xNorm = (e.clientX / window.innerWidth) * 2 - 1;
-      const yNorm = (e.clientY / window.innerHeight) * 2 - 1;
-      targetCursor.current = { x: xNorm, y: yNorm };
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-
-    const loop = () => {
+    let animId: number;
+    const tick = () => {
       setCursor((prev) => ({
-        x: prev.x + (targetCursor.current.x - prev.x) * 0.08,
-        y: prev.y + (targetCursor.current.y - prev.y) * 0.08,
+        x: prev.x + (targetCursor.current.x - prev.x) * 0.1,
+        y: prev.y + (targetCursor.current.y - prev.y) * 0.1,
       }));
-      rafId.current = requestAnimationFrame(loop);
+      animId = requestAnimationFrame(tick);
     };
-    rafId.current = requestAnimationFrame(loop);
+    animId = requestAnimationFrame(tick);
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
+    return () => cancelAnimationFrame(animId);
   }, []);
 
-  // ---------------------------------------------------------------------------
-  // Scroll Driven Choreography
-  // When entering: media scale 0.90 -> 1.00, title translateY 60 -> 0, tech graphics draw in
-  // When leaving: media scales down slightly (1.00 -> 0.96), title shifts upward, tech fades
-  // ---------------------------------------------------------------------------
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mediaRef.current) return;
+    const rect = mediaRef.current.getBoundingClientRect();
+    const xNorm = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const yNorm = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    targetCursor.current = {
+      x: Math.max(-1, Math.min(1, xNorm)),
+      y: Math.max(-1, Math.min(1, yNorm)),
+    };
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    targetCursor.current = { x: 0, y: 0 };
+  };
+
+  // Scroll Tracking for Stacking Transformation
   const { scrollYProgress } = useScroll({
-    target: sceneRef,
-    offset: ['start end', 'end start'],
+    target: stageRef,
+    offset: ['start start', 'end start'],
   });
 
-  // Entrance -> Center -> Exit phases across scroll
-  // [0, 0.35] = Entrance to Center
-  // [0.35, 0.65] = Stable Center Scene
-  // [0.65, 1.0] = Exit
-  const mediaScale = useTransform(scrollYProgress, [0, 0.38, 0.7, 1], [0.90, 1.00, 1.00, 0.96]);
-  const mediaY = useTransform(scrollYProgress, [0, 0.38, 0.7, 1], [70, 0, 0, -50]);
-  const titleY = useTransform(scrollYProgress, [0, 0.38, 0.7, 1], [60, 0, 0, -40]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.25, 0.8, 1], [0, 1, 1, 0.3]);
-  const techOpacity = useTransform(scrollYProgress, [0, 0.3, 0.75, 1], [0.1, 0.85, 0.85, 0.1]);
-  const metaY = useTransform(scrollYProgress, [0.1, 0.4], [35, 0]);
-  const metaOpacity = useTransform(scrollYProgress, [0.1, 0.35], [0, 1]);
+  // Scale down and dim when Project 02 enters and stacks above
+  const stackScale = useTransform(scrollYProgress, [0, 0.65, 1], [1, 0.94, 0.9]);
+  const stackOpacity = useTransform(scrollYProgress, [0, 0.65, 1], [1, 0.5, 0.25]);
+  const stackY = useTransform(scrollYProgress, [0, 1], [0, -30]);
 
-  // Determine Project Type / Visual Mode for bespoke technical overlay
-  const isSvgRegistry = project.slug.includes('svg') || project.slug.includes('asset');
-  const is3D = project.slug.includes('3d') || project.slug.includes('rockyhomepage');
-  const isMelius = project.slug.includes('melius') || project.slug.includes('ai');
+  // Sync atmosphere context on view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSlug(project.slug);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    if (stageRef.current) {
+      observer.observe(stageRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [project.slug, setActiveSlug]);
+
+  const tiltX = -cursor.y * 2.8;
+  const tiltY = cursor.x * 3.0;
+  const transX = cursor.x * 14;
+  const transY = cursor.y * 10;
+
+  const handleNavigate = () => {
+    setActiveSlug(project.slug);
+    navigate(`/projects/${project.slug}`);
+  };
 
   return (
-    <section
-      id={`project-scene-${project.number}`}
-      ref={sceneRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`relative min-h-[105vh] flex flex-col justify-center py-16 sm:py-24 lg:py-32 transition-colors duration-500 overflow-hidden ${
-        isDark ? 'text-[#F5F3EF]' : 'text-[#171717]'
-      }`}
+    <div
+      ref={stageRef}
+      id={`project-${project.slug}`}
+      className="relative min-h-[92vh] lg:min-h-screen py-8 sm:py-12"
     >
-      {/* =======================================================================
-          LAYER 1: BACKGROUND LAYER (Atmosphere, Watercolor wash & radiant glow)
-          ======================================================================= */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        {/* Soft Organic Wash Bleed */}
-        <div className="absolute -bottom-24 -right-16 w-[750px] lg:w-[1100px] h-[550px] lg:h-[750px] opacity-60">
-          <WatercolorStain
-            variant="pool-deep"
-            palette={isDark ? 'violet' : 'warm'}
-            intensity="deep"
-            seed={3}
-            opacity={isDark ? 0.35 : 0.6}
+      {/* Sticky Pinned Scene Stage */}
+      <motion.div
+        style={{
+          scale: stackScale,
+          opacity: stackOpacity,
+          y: stackY,
+          zIndex: 10,
+        }}
+        className={`sticky top-16 sm:top-20 lg:top-24 w-full min-h-[82vh] lg:min-h-[86vh] flex flex-col justify-between rounded-sm transition-colors duration-500 overflow-hidden ${
+          isDark
+            ? 'bg-[#060217]/95 border border-violet-900/40 shadow-[0_30px_100px_-20px_rgba(3,0,20,0.8)]'
+            : 'bg-[#FAF9F5]/95 border border-[#E2DFD2] shadow-[0_30px_80px_-20px_rgba(30,20,50,0.12)]'
+        }`}
+      >
+        {/* =====================================================================
+            PROJECT 01 BESPOKE ATMOSPHERE: SYSTEM / DATA / NETWORK (SVG Downloader)
+            ===================================================================== */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+          <svg className="w-full h-full absolute inset-0 opacity-25">
+            <path
+              d="M 0,160 C 280,160 380,260 760,260 S 1100,140 1600,140"
+              fill="none"
+              stroke={isDark ? '#38BDF8' : '#0284C7'}
+              strokeWidth="1.2"
+              strokeDasharray="5 7"
+            />
+            <circle cx="760" cy="260" r="4" fill={isDark ? '#38BDF8' : '#0284C7'} />
+            <circle cx="380" cy="210" r="3" fill={isDark ? '#A78BFA' : '#7C3AED'} />
+          </svg>
+          <div
+            className={`absolute -top-16 -right-16 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none ${
+              isDark ? 'bg-sky-900/15' : 'bg-sky-200/25'
+            }`}
           />
         </div>
 
-        {/* Ambient Top Counter-Balance Halo */}
-        <div
-          className={`absolute -top-32 -left-20 w-[600px] lg:w-[900px] h-[600px] lg:h-[900px] rounded-full filter blur-[140px] pointer-events-none transition-opacity duration-700 ${
-            isDark ? 'bg-violet-900/20' : 'bg-purple-300/20'
-          } ${isHovered ? 'opacity-90' : 'opacity-40'}`}
-        />
-      </div>
-
-      {/* =======================================================================
-          LAYER 2: TECHNICAL OVERLAY LAYER
-          Bespoke line art, network signals, perspective planes, or circular carousel geometry
-          ======================================================================= */}
-      <motion.div
-        style={{
-          opacity: techOpacity,
-          x: cursor.x * -6,
-          y: cursor.y * -6,
-        }}
-        className="absolute inset-0 pointer-events-none overflow-hidden z-[2]"
-        aria-hidden="true"
-      >
-        <svg
-          className="w-full h-full absolute inset-0"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            {/* Fine Technical Coordinate Crosshair Grid */}
-            <pattern id="scene-tech-grid" width="80" height="80" patternUnits="userSpaceOnUse">
-              <path
-                d="M 40 0 L 40 80 M 0 40 L 80 40"
-                stroke={isDark ? '#8B5CF6' : '#171717'}
-                strokeWidth="0.5"
-                strokeOpacity={isDark ? '0.07' : '0.04'}
-              />
-              <path
-                d="M 37 40 h 6 M 40 37 v 6"
-                stroke={isDark ? '#A78BFA' : '#7C3AED'}
-                strokeWidth="0.8"
-                strokeOpacity={isDark ? (isHovered ? '0.35' : '0.18') : (isHovered ? '0.25' : '0.12')}
-              />
-            </pattern>
-          </defs>
-
-          <rect width="100%" height="100%" fill="url(#scene-tech-grid)" />
-
-          {/* Bespoke Visual Geometries based on project slug */}
-          {isSvgRegistry && (
-            /* SVG Downloader: subtle data / network lines & extraction bus paths */
-            <g>
-              {/* Main signal spine vector */}
-              <path
-                d="M 0,220 C 350,220 520,380 960,380 S 1400,260 1920,260"
-                fill="none"
-                stroke={isDark ? 'rgba(139, 92, 246, 0.22)' : 'rgba(0, 0, 0, 0.1)'}
-                strokeWidth="1.2"
-                strokeDasharray="6 6"
-              />
-              <path
-                d="M 0,220 C 350,220 520,380 960,380 S 1400,260 1920,260"
-                fill="none"
-                stroke={isDark ? '#C4B5FD' : '#7C3AED'}
-                strokeWidth="1.8"
-                strokeDasharray="18 200"
-                className="animate-[dash_10s_linear_infinite]"
-              />
-
-              {/* Parallel cryptographic verification channel */}
-              <path
-                d="M 120,180 L 750,180 L 920,320 L 1600,320"
-                fill="none"
-                stroke={isDark ? 'rgba(167, 139, 250, 0.25)' : 'rgba(124, 58, 237, 0.15)'}
-                strokeWidth="1"
-                strokeDasharray="3 7"
-              />
-
-              {/* Data Node Indicators */}
-              <circle cx="750" cy="180" r="3" fill={isDark ? '#C4B5FD' : '#7C3AED'} />
-              <circle cx="920" cy="320" r="3.5" fill={isDark ? '#A78BFA' : '#8B5CF6'} />
-              <circle cx="1600" cy="320" r="3" fill={isDark ? '#C4B5FD' : '#7C3AED'} />
-
-              {/* Engineering Readout */}
-              <text
-                x="88%"
-                y="18%"
-                fontFamily="monospace"
-                fontSize="9"
-                letterSpacing="0.28em"
-                fill={isDark ? '#A78BFA' : '#171717'}
-                fillOpacity={isHovered ? '0.6' : '0.35'}
-                textAnchor="end"
-              >
-                PIPE::DOM_SCAN // SHA256_INTEGRITY
-              </text>
-            </g>
-          )}
-
-          {is3D && (
-            /* rockyhomepage3D: depth / perspective / orbital projection lines */
-            <g>
-              <line
-                x1="10%" y1="90%" x2="90%" y2="10%"
-                stroke={isDark ? 'rgba(139, 92, 246, 0.2)' : 'rgba(0, 0, 0, 0.08)'}
-                strokeWidth="0.8"
-                strokeDasharray="4 6"
-              />
-              <line
-                x1="10%" y1="10%" x2="90%" y2="90%"
-                stroke={isDark ? 'rgba(139, 92, 246, 0.2)' : 'rgba(0, 0, 0, 0.08)'}
-                strokeWidth="0.8"
-                strokeDasharray="4 6"
-              />
-              <ellipse
-                cx="50%" cy="50%" rx="520" ry="240"
-                fill="none"
-                stroke={isDark ? '#A78BFA' : '#7C3AED'}
-                strokeWidth="1"
-                strokeDasharray="8 8"
-                strokeOpacity={isHovered ? '0.4' : '0.2'}
-                className="origin-center animate-[spin_80s_linear_infinite]"
-              />
-            </g>
-          )}
-
-          {isMelius && (
-            /* melius-like: circular / cylindrical carousel-inspired geometry */
-            <g>
-              <circle
-                cx="65%" cy="45%" r="380"
-                fill="none"
-                stroke={isDark ? 'rgba(139, 92, 246, 0.25)' : 'rgba(0, 0, 0, 0.1)'}
-                strokeWidth="1"
-                strokeDasharray="4 8"
-              />
-              <circle
-                cx="65%" cy="45%" r="460"
-                fill="none"
-                stroke={isDark ? '#C4B5FD' : '#7C3AED'}
-                strokeWidth="1.2"
-                strokeDasharray="24 180"
-                strokeOpacity={isHovered ? '0.5' : '0.25'}
-                className="origin-center animate-[spin_60s_linear_infinite]"
-              />
-            </g>
-          )}
-        </svg>
-      </motion.div>
-
-      {/* =======================================================================
-          CORE SCENE STAGE (Desktop 60–75vw Dominant Media with Layered Title)
-          ======================================================================= */}
-      <div className="relative w-full max-w-[1720px] mx-auto px-4 sm:px-8 lg:px-12 z-10">
-        {/* Top Minimal Scene Index Bar */}
-        <motion.div
-          style={{ y: metaY, opacity: metaOpacity }}
-          className="flex items-center justify-between font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.28em] pb-6 sm:pb-8 border-b border-current/10"
-        >
-          <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-            <span className="font-semibold text-violet-400">SPECIMEN // #{project.number}</span>
-            <span className="opacity-30">/</span>
-            <span className="opacity-70">{project.category} · {project.type}</span>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-6 opacity-60 text-[10px]">
-            <span>{project.year} PRODUCTION</span>
-            <span className="opacity-30">·</span>
-            <span>AUTONOMOUS ENGINE</span>
-          </div>
-        </motion.div>
-
-        {/* Spatial Composition Stage */}
-        <div className="relative pt-6 sm:pt-10 lg:pt-12">
-          {/* ===================================================================
-              LAYER 3: MONUMENTAL TYPOGRAPHY LAYER
-              clamp(44px, 6vw, 92px) positioned independently from media,
-              interlocking in z-space (z-20) with graceful negative margins
-              =================================================================== */}
-          <motion.div
-            style={{
-              y: titleY,
-              opacity: titleOpacity,
-              x: cursor.x * 10,
-            }}
-            className="relative z-20 pointer-events-auto will-change-transform max-w-[92vw] lg:max-w-[70vw]"
-          >
-            {/* Colossal Title */}
-            <Link
-              to={`/projects/${project.slug}`}
-              data-cursor="SHOW"
-              className="group inline-block focus:outline-none"
-            >
-              <h3
-                className={`font-serif font-light text-[clamp(44px,6.2vw,96px)] tracking-[-0.045em] leading-[0.85] lowercase transition-transform duration-500 select-none ${
-                  isHovered ? 'translate-x-2' : ''
-                }`}
-              >
-                <span>{title}</span>
-                <span className={isDark ? 'text-violet-400' : 'text-[#8B5CF6]'}>.</span>
-              </h3>
-            </Link>
-
-            {/* Architectural Summary Sub-Lead floating across the lower title */}
-            <p className="font-serif italic text-xl sm:text-2xl lg:text-3xl opacity-85 font-light leading-snug mt-3 sm:mt-5 max-w-3xl">
-              {summary}
-            </p>
-          </motion.div>
-
-          {/* ===================================================================
-              LAYER 4: REAL MEDIA LAYER (DOMINANT VISUAL 60–75vw)
-              Extends beyond normal content boundaries with layered shadow & perspective
-              =================================================================== */}
-          <motion.div
-            style={{
-              scale: mediaScale,
-              y: mediaY,
-              x: cursor.x * -14,
-              transform: `perspective(1400px) rotateX(${cursor.y * -4}deg) rotateY(${cursor.x * 4}deg)`,
-            }}
-            onClick={() => navigate(`/projects/${project.slug}`)}
-            data-cursor="EXAMINE"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') navigate(`/projects/${project.slug}`);
-            }}
-            aria-label={`View specimen ${title}`}
-            className="relative z-10 mt-6 sm:mt-8 lg:-mt-10 lg:ml-auto w-full lg:w-[72vw] max-w-[1380px] cursor-pointer will-change-transform group/media"
-          >
-            {/* Multi-layered Glass Carrier Frame */}
-            <div
-              className={`relative p-2.5 sm:p-4 rounded-sm transition-all duration-700 ease-out ${
-                isDark
-                  ? 'bg-[#08031d]/90 backdrop-blur-2xl border border-violet-700/35 shadow-[0_45px_130px_-30px_rgba(124,58,237,0.5)] group-hover/media:border-violet-400/60'
-                  : 'bg-white/80 backdrop-blur-2xl border border-[#D8D4C5] shadow-[0_45px_100px_-30px_rgba(30,20,50,0.2)] group-hover/media:border-neutral-500'
-              } ${isHovered ? 'shadow-[0_55px_150px_-25px_rgba(124,58,237,0.6)]' : ''}`}
-            >
-              {/* Corner Reticles */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-violet-400/80 pointer-events-none z-30" />
-              <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-violet-400/80 pointer-events-none z-30" />
-              <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-violet-400/80 pointer-events-none z-30" />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-violet-400/80 pointer-events-none z-30" />
-
-              {/* Real Project Media (Authentic Evidence — untouched ProjectMediaFrame) */}
-              <div className="relative overflow-hidden rounded-xs">
-                <div
-                  className={`transition-transform duration-700 ease-out ${
-                    isHovered ? 'scale-[1.018]' : 'scale-100'
-                  }`}
-                >
-                  <ProjectMediaFrame
-                    project={project}
-                    aspectRatio="aspect-[16/10] sm:aspect-[21/10]"
-                    isHovered={isHovered}
-                    priority={true}
-                    showCaption={false}
-                  />
-                </div>
-
-                {/* Ambient Scanline & Sheen Glaze */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/[0.06] via-transparent to-purple-400/[0.04] pointer-events-none opacity-60 group-hover/media:opacity-100 transition-opacity duration-500" />
-              </div>
-
-              {/* Integrated Micro HUD Status Band */}
-              <div className="pt-3.5 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-[11px] opacity-80">
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-violet-400">SPECIMEN #{project.number}</span>
-                  <span className="opacity-30">/</span>
-                  <span className="lowercase font-semibold">{project.slug}</span>
-                  <span className="hidden sm:inline opacity-30">/</span>
-                  <span className="hidden sm:inline uppercase text-[9px] px-2 py-0.5 rounded-xs bg-current/5 border border-current/10">
-                    {project.status || 'Verified Runtime'}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <span className="hidden md:inline opacity-55">
-                    {project.tools.slice(0, 4).join(' · ')}
-                  </span>
-                  <span className="text-violet-400 font-semibold flex items-center gap-1 group-hover/media:text-violet-300 transition-colors uppercase tracking-wider text-[10px]">
-                    <span>Examine Specimen</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </div>
+        {/* =====================================================================
+            SPATIAL STAGING: FLOATING INFORMATION SURROUNDING REAL MEDIA
+            ===================================================================== */}
+        <div className="relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 flex flex-col justify-between h-full">
+          {/* Top Spatial Header: Number, Category, Direct External Links */}
+          <div className="flex items-baseline justify-between font-mono text-xs opacity-75 pb-4 border-b border-current/10">
+            <div className="flex items-center gap-3">
+              <span className="font-serif text-3xl sm:text-4xl font-light text-current opacity-70">
+                01
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+              <span className="uppercase text-[11px] font-semibold tracking-[0.24em] text-violet-400">
+                {project.category} // {project.type}
+              </span>
             </div>
 
-            {/* Glowing Depth Halo behind the Media Frame */}
-            <div
-              className={`absolute -inset-4 rounded-xl filter blur-3xl pointer-events-none -z-10 transition-opacity duration-700 ${
-                isDark
-                  ? 'bg-violet-600/25 group-hover/media:opacity-80'
-                  : 'bg-purple-400/20 group-hover/media:opacity-60'
-              } ${isHovered ? 'opacity-70' : 'opacity-30'}`}
-            />
-          </motion.div>
-
-          {/* ===================================================================
-              LAYER 5: METADATA & SYSTEM EXPLORATION LAYER
-              Staggers into view gracefully; appears contextually on hover
-              =================================================================== */}
-          <motion.div
-            style={{ y: metaY, opacity: metaOpacity }}
-            className="relative z-20 pt-10 sm:pt-14 lg:pt-16 max-w-5xl space-y-8"
-          >
-            {/* Deep Technical Description */}
-            <p className="text-[15px] sm:text-[17px] opacity-85 font-sans leading-relaxed font-light max-w-3xl">
-              {description}
-            </p>
-
-            {/* Verified Tool Tokens */}
-            <div className="flex flex-wrap gap-2 pt-1">
-              {project.tools.map((tool) => (
-                <span
-                  key={tool}
-                  className="font-mono text-[11px] uppercase tracking-wider px-3 py-1 rounded-xs bg-current/5 border border-current/10"
-                >
-                  {tool}
-                </span>
-              ))}
-            </div>
-
-            {/* Direct Action Controls & Architecture Drawer Trigger */}
-            <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-xs">
+            <div className="flex items-center gap-4 text-[11px]">
+              <span className="opacity-60">{project.year}</span>
               {project.demo && (
                 <a
                   href={project.demo}
                   target="_blank"
                   rel="noreferrer noopener"
                   data-cursor="VISIT"
-                  className="py-3 px-6 rounded-xs bg-violet-600 text-white font-semibold flex items-center gap-2 shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:bg-violet-500 transition-all uppercase tracking-wider"
+                  className="hidden sm:inline-flex items-center gap-1 text-violet-400 hover:underline uppercase text-[10px] font-semibold"
+                  title="Open live demonstration"
                 >
-                  <span>Launch Live System</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Live</span>
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               )}
-
               {project.github && (
                 <a
                   href={project.github}
                   target="_blank"
                   rel="noreferrer noopener"
                   data-cursor="CODE"
-                  className="py-3 px-6 rounded-xs border border-current/20 hover:border-violet-400 flex items-center gap-2 transition-colors uppercase tracking-wider"
+                  className="hidden sm:inline-flex items-center gap-1 text-violet-400 hover:underline uppercase text-[10px] font-semibold"
+                  title="Inspect GitHub repository"
                 >
-                  <span>Inspect Source</span>
-                  <Github className="w-3.5 h-3.5" />
+                  <span>Code</span>
+                  <Github className="w-3 h-3" />
                 </a>
               )}
+            </div>
+          </div>
 
-              <MagneticLink strength={3}>
-                <Link
-                  to={`/projects/${project.slug}`}
-                  data-cursor="SHOW"
-                  className="inline-flex items-center gap-1.5 text-violet-400 hover:text-violet-300 font-semibold uppercase tracking-wider text-[11px] transition-colors py-2"
-                >
-                  <span>Read Full Case Study</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
-              </MagneticLink>
-
-              {/* Topology Toggle Button */}
-              <button
-                onClick={() => setShowTopology(!showTopology)}
-                className={`ml-auto py-2.5 px-4 rounded-xs border font-mono text-[11px] uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
-                  isDark
-                    ? 'bg-violet-950/30 border-violet-800/40 hover:bg-violet-950/60 text-violet-200'
-                    : 'bg-black/[0.04] border-black/10 hover:bg-black/[0.08] text-neutral-800'
-                }`}
-                aria-expanded={showTopology}
+          {/* Center Stage: Monumental Title + Oversized Real Media Plate */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center my-auto py-6 sm:py-8">
+            {/* Left Spatial Column: Giant Title & Narrative Thesis (5 Cols) */}
+            <div className="lg:col-span-5 space-y-5">
+              <div
+                onClick={handleNavigate}
+                data-cursor="EXAMINE"
+                className="cursor-pointer group/title inline-block"
               >
-                <Cpu className="w-3.5 h-3.5 text-violet-400" />
-                <span>{showTopology ? 'Hide Architecture Topology' : 'Inspect Verified Architecture'}</span>
-                {showTopology ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              </button>
+                <h2
+                  className={`font-serif font-light text-[clamp(40px,5.5vw,88px)] tracking-[-0.04em] leading-[0.88] lowercase text-current transition-transform duration-500 ${
+                    isHovered ? 'translate-x-2' : ''
+                  }`}
+                >
+                  <span>{title}</span>
+                  <span className={isDark ? 'text-violet-400' : 'text-[#7C3AED]'}>.</span>
+                </h2>
+              </div>
+
+              <p className="text-[14px] sm:text-[16px] opacity-80 font-sans leading-relaxed font-light max-w-lg">
+                {summary}
+              </p>
+
+              <div className="pt-2">
+                <button
+                  onClick={handleNavigate}
+                  data-cursor="EXAMINE"
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xs font-mono text-xs uppercase tracking-wider transition-all cursor-pointer ${
+                    isDark
+                      ? 'bg-violet-600/25 border border-violet-500/40 text-violet-200 hover:bg-violet-600 hover:text-white'
+                      : 'bg-black/5 border border-black/15 text-neutral-800 hover:bg-black hover:text-white'
+                  }`}
+                >
+                  <span>Examine Project</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
-            {/* Architecture Topology Drawer */}
-            {showTopology && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="pt-4 overflow-hidden"
+            {/* Right Spatial Column: Oversized Real Media Specimen (7 Cols) */}
+            <div className="lg:col-span-7">
+              <div
+                ref={mediaRef}
+                onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={handleMouseLeave}
+                onClick={handleNavigate}
+                data-cursor="EXAMINE"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') handleNavigate();
+                }}
+                aria-label={`Open ${title}`}
+                style={{
+                  transform: `perspective(1200px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translate3d(${transX}px, ${transY}px, 0)`,
+                  transition: isHovered
+                    ? 'transform 0.12s ease-out'
+                    : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+                className="relative cursor-pointer will-change-transform group/media"
               >
-                <ProjectArchitectureDiagram project={project} />
-              </motion.div>
-            )}
-          </motion.div>
+                {/* Multi-layered Glass Carrier Frame */}
+                <div
+                  className={`relative p-2.5 sm:p-4 rounded-sm transition-all duration-500 ${
+                    isDark
+                      ? 'bg-[#09041d]/90 backdrop-blur-2xl border border-violet-800/40 shadow-[0_30px_90px_-20px_rgba(124,58,237,0.4)] group-hover/media:border-violet-400/60 group-hover/media:shadow-[0_40px_120px_-20px_rgba(124,58,237,0.6)]'
+                      : 'bg-white/85 backdrop-blur-2xl border border-[#D8D4C5] shadow-[0_30px_80px_-20px_rgba(30,20,50,0.14)] group-hover/media:border-neutral-700 group-hover/media:shadow-[0_40px_100px_-20px_rgba(30,20,50,0.2)]'
+                  }`}
+                >
+                  {/* Corner Precision Crosshairs */}
+                  <div className="absolute top-2 left-2 w-2.5 h-2.5 border-t border-l border-violet-400/80 pointer-events-none z-30" />
+                  <div className="absolute top-2 right-2 w-2.5 h-2.5 border-t border-r border-violet-400/80 pointer-events-none z-30" />
+                  <div className="absolute bottom-2 left-2 w-2.5 h-2.5 border-b border-l border-violet-400/80 pointer-events-none z-30" />
+                  <div className="absolute bottom-2 right-2 w-2.5 h-2.5 border-b border-r border-violet-400/80 pointer-events-none z-30" />
+
+                  {/* Shared Layout Media Container */}
+                  <motion.div
+                    layoutId={`project-media-frame-${project.slug}`}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative overflow-hidden rounded-xs"
+                  >
+                    <div
+                      className={`transition-transform duration-700 ease-out ${
+                        isHovered ? 'scale-[1.02]' : 'scale-100'
+                      }`}
+                    >
+                      <ProjectMediaFrame
+                        project={project}
+                        aspectRatio="aspect-[16/10] sm:aspect-[21/11]"
+                        isHovered={isHovered}
+                        priority={true}
+                        showCaption={false}
+                      />
+                    </div>
+
+                    <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/[0.05] via-transparent to-transparent pointer-events-none opacity-40 group-hover/media:opacity-100 transition-opacity duration-500" />
+                  </motion.div>
+
+                  {/* Minimalist Telemetry Readout */}
+                  <div className="pt-3 px-1 flex items-center justify-between font-mono text-[10px] sm:text-[11px] opacity-75">
+                    <span className="lowercase opacity-80 truncate max-w-[240px]">
+                      {project.slug}
+                    </span>
+                    <div className="flex items-center gap-1 text-violet-400 font-semibold uppercase tracking-wider text-[10px]">
+                      <span>View Details</span>
+                      <ArrowUpRight
+                        className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                          isHovered ? 'translate-x-1 -translate-y-1 text-violet-300' : ''
+                        }`}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Radiant Backdrop Glow */}
+                <div
+                  className={`absolute -inset-4 rounded-xl filter blur-2xl pointer-events-none -z-10 transition-opacity duration-700 ${
+                    isDark ? 'bg-violet-600/25' : 'bg-purple-400/20'
+                  } ${isHovered ? 'opacity-90' : 'opacity-25'}`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Floating Bar: Technical Tools Tokens */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-current/10 font-mono text-[11px] opacity-70">
+            <div className="flex flex-wrap gap-2">
+              {project.tools.slice(0, 6).map((tool) => (
+                <span
+                  key={tool}
+                  className="px-2.5 py-1 rounded-xs bg-current/5 border border-current/10 uppercase tracking-wider text-[10px]"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4 text-[10px] opacity-65">
+              <span>{project.status.toUpperCase()} DEPLOYMENT</span>
+              <span className="opacity-30">·</span>
+              <span>SCENE 01 / 03</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </div>
   );
 };
-

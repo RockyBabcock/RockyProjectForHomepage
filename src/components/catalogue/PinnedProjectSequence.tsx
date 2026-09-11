@@ -9,21 +9,21 @@ import { useProjectAtmosphere } from '../../context/ProjectAtmosphereContext';
 import { ProjectMediaFrame } from '../ProjectMediaFrame';
 import { Spatial3DCanvas } from '../Spatial3DCanvas';
 
-interface ProjectGridProps {
+interface PinnedProjectSequenceProps {
   projects: Project[];
 }
 
-interface ProjectGridSceneProps {
+/**
+ * Individual Pinned Project Scene with Bespoke Atmospheric Geometry,
+ * Floating Information, 3D Pointer Tilt (max 3 deg), and Shared-Layout Media
+ */
+interface ProjectSceneProps {
   project: Project;
-  sceneNumber: string;
-  isLastScene: boolean;
+  index: number;
+  total: number;
 }
 
-const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
-  project,
-  sceneNumber,
-  isLastScene,
-}) => {
+const ProjectScene: React.FC<ProjectSceneProps> = ({ project, index, total }) => {
   const { localizeText } = useLanguage();
   const { mode } = useSurfaceMode();
   const isDark = mode === 'dark';
@@ -34,9 +34,11 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
   const summary = localizeText(project.summary);
 
   const sceneRef = useRef<HTMLDivElement>(null);
-  const mediaRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  // Pointer-Driven Perspective Tilt (Strict limit: Max 2.8 deg, 8–14px shift)
+  // ---------------------------------------------------------------------------
+  // Pointer-Driven Perspective Tilt (Strict limit: Max 2.8 deg, 10–14px shift)
+  // ---------------------------------------------------------------------------
   const [isHovered, setIsHovered] = useState(false);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const targetCursor = useRef({ x: 0, y: 0 });
@@ -60,8 +62,8 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!mediaRef.current) return;
-    const rect = mediaRef.current.getBoundingClientRect();
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
     const xNorm = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     const yNorm = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     targetCursor.current = {
@@ -75,25 +77,19 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
     targetCursor.current = { x: 0, y: 0 };
   };
 
-  // Scroll tracking for depth stacking
+  // Scroll Tracking for Stacking Transformation
   const { scrollYProgress } = useScroll({
     target: sceneRef,
     offset: ['start start', 'end start'],
   });
 
-  const stackScale = useTransform(
-    scrollYProgress,
-    [0, 0.65, 1],
-    [1, isLastScene ? 1 : 0.94, isLastScene ? 1 : 0.9]
-  );
-  const stackOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.65, 1],
-    [1, isLastScene ? 1 : 0.5, isLastScene ? 1 : 0.3]
-  );
-  const stackY = useTransform(scrollYProgress, [0, 1], [0, isLastScene ? 0 : -30]);
+  // Scale down and dim when the next scene scrolls over this scene
+  const isLast = index === total - 1;
+  const stackScale = useTransform(scrollYProgress, [0, 0.7, 1], [1, isLast ? 1 : 0.93, isLast ? 1 : 0.9]);
+  const stackOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, isLast ? 1 : 0.45, isLast ? 1 : 0.3]);
+  const stackY = useTransform(scrollYProgress, [0, 1], [0, isLast ? 0 : -20]);
 
-  // Sync atmosphere context on view
+  // Notify atmosphere context when this scene is prominently in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -103,7 +99,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
           }
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.45 }
     );
 
     if (sceneRef.current) {
@@ -115,11 +111,13 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
 
   const is3D = project.slug.includes('3d') || project.slug.includes('rockyhomepage');
   const isAI = project.slug.includes('ai') || project.slug.includes('melius');
+  const isSvg = project.slug.includes('svg') || project.slug.includes('asset');
 
+  // Precision tilt values
   const tiltX = -cursor.y * 2.8;
   const tiltY = cursor.x * 3.0;
   const transX = cursor.x * 14;
-  const transY = cursor.y * 10;
+  const transY = cursor.y * 11;
 
   const handleNavigate = () => {
     setActiveSlug(project.slug);
@@ -138,21 +136,44 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
           scale: stackScale,
           opacity: stackOpacity,
           y: stackY,
-          zIndex: isLastScene ? 30 : 20,
+          zIndex: 10 + index,
         }}
-        className={`sticky top-16 sm:top-20 lg:top-24 w-full min-h-[82vh] lg:min-h-[86vh] flex flex-col justify-between rounded-sm transition-colors duration-500 overflow-hidden ${
+        className={`sticky top-16 sm:top-20 lg:top-24 w-full min-h-[82vh] lg:min-h-[86vh] flex flex-col justify-center rounded-sm transition-colors duration-500 overflow-hidden ${
           isDark
             ? 'bg-[#060217]/95 border border-violet-900/40 shadow-[0_30px_100px_-20px_rgba(3,0,20,0.8)]'
             : 'bg-[#FAF9F5]/95 border border-[#E2DFD2] shadow-[0_30px_80px_-20px_rgba(30,20,50,0.12)]'
         }`}
       >
         {/* =====================================================================
-            BESPOKE ATMOSPHERIC SIGNATURE
+            BESPOKE TECHNICAL ATMOSPHERE (Project-Specific Visual Language)
             ===================================================================== */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+          {/* Project 01: SYSTEM / DATA / NETWORK (SVG Downloader) */}
+          {isSvg && (
+            <>
+              <svg className="w-full h-full absolute inset-0 opacity-25">
+                <path
+                  d="M 0,120 C 300,120 400,280 800,280 S 1200,160 1800,160"
+                  fill="none"
+                  stroke={isDark ? '#38BDF8' : '#0284C7'}
+                  strokeWidth="1.2"
+                  strokeDasharray="5 7"
+                />
+                <circle cx="800" cy="280" r="4" fill={isDark ? '#38BDF8' : '#0284C7'} />
+                <circle cx="400" cy="200" r="3" fill={isDark ? '#A78BFA' : '#7C3AED'} />
+              </svg>
+              <div
+                className={`absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none ${
+                  isDark ? 'bg-sky-900/15' : 'bg-sky-200/30'
+                }`}
+              />
+            </>
+          )}
+
           {/* Project 02: SPACE / DEPTH / 3D (rockyhomepage3D) */}
           {is3D && (
             <>
+              {/* Real-time WebGL 3D Canvas Depth Accent */}
               <div
                 className={`absolute inset-0 transition-opacity duration-700 pointer-events-none ${
                   isHovered ? 'opacity-70' : 'opacity-35'
@@ -161,7 +182,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
                 <Spatial3DCanvas isHovered={isHovered} />
               </div>
               <div
-                className={`absolute top-[15%] left-[8%] w-[650px] h-[650px] rounded-full blur-[150px] pointer-events-none ${
+                className={`absolute top-[20%] left-[10%] w-[650px] h-[650px] rounded-full blur-[150px] pointer-events-none ${
                   isDark ? 'bg-indigo-900/20' : 'bg-indigo-200/30'
                 }`}
               />
@@ -172,9 +193,9 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
           {isAI && (
             <>
               <svg className="w-full h-full absolute inset-0 opacity-25">
-                <g className="origin-[85%_45%]">
+                <g className="origin-[80%_45%]">
                   <circle
-                    cx="85%"
+                    cx="80%"
                     cy="45%"
                     r="260"
                     fill="none"
@@ -183,7 +204,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
                     strokeDasharray="4 8"
                   />
                   <circle
-                    cx="85%"
+                    cx="80%"
                     cy="45%"
                     r="340"
                     fill="none"
@@ -193,18 +214,18 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
                     className="animate-[spin_65s_linear_infinite]"
                   />
                   <line
-                    x1="85%"
+                    x1="80%"
                     y1="10%"
-                    x2="85%"
+                    x2="80%"
                     y2="80%"
                     stroke={isDark ? '#F472B6' : '#DB2777'}
                     strokeWidth="0.5"
                     strokeOpacity="0.4"
                   />
                   <line
-                    x1="55%"
+                    x1="50%"
                     y1="45%"
-                    x2="115%"
+                    x2="110%"
                     y2="45%"
                     stroke={isDark ? '#F472B6' : '#DB2777'}
                     strokeWidth="0.5"
@@ -222,14 +243,20 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
         </div>
 
         {/* =====================================================================
-            SPATIAL STAGING: FLOATING INFORMATION SURROUNDING REAL MEDIA
+            PROJECT SCENE STAGING: INFORMATION FLOATS AROUND REAL MEDIA
             ===================================================================== */}
-        <div className="relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 flex flex-col justify-between h-full">
-          {/* Top Spatial Header: Number, Category, Direct External Links */}
+        <div
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={handleMouseLeave}
+          className="relative z-10 p-6 sm:p-10 lg:p-14 xl:p-16 flex flex-col justify-between h-full"
+        >
+          {/* Top Spatial Bar: Number, Category, Year, Live Link */}
           <div className="flex items-baseline justify-between font-mono text-xs opacity-75 pb-4 border-b border-current/10">
             <div className="flex items-center gap-3">
               <span className="font-serif text-3xl sm:text-4xl font-light text-current opacity-70">
-                {sceneNumber}
+                {project.number}
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
               <span className="uppercase text-[11px] font-semibold tracking-[0.24em] text-violet-400">
@@ -268,7 +295,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
             </div>
           </div>
 
-          {/* Center Stage: Monumental Title + Oversized Real Media Plate */}
+          {/* Centerpiece: Monumental Title + Oversized Real Media Plate */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center my-auto py-6 sm:py-8">
             {/* Left Spatial Column: Giant Title & Narrative Thesis (5 Cols) */}
             <div className="lg:col-span-5 space-y-5">
@@ -277,20 +304,22 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
                 data-cursor="EXAMINE"
                 className="cursor-pointer group/title inline-block"
               >
-                <h2
+                <h3
                   className={`font-serif font-light text-[clamp(40px,5.5vw,88px)] tracking-[-0.04em] leading-[0.88] lowercase text-current transition-transform duration-500 ${
                     isHovered ? 'translate-x-2' : ''
                   }`}
                 >
                   <span>{title}</span>
                   <span className={isDark ? 'text-violet-400' : 'text-[#7C3AED]'}>.</span>
-                </h2>
+                </h3>
               </div>
 
+              {/* Refined Narrative Thesis */}
               <p className="text-[14px] sm:text-[16px] opacity-80 font-sans leading-relaxed font-light max-w-lg">
                 {summary}
               </p>
 
+              {/* Action Trigger */}
               <div className="pt-2">
                 <button
                   onClick={handleNavigate}
@@ -310,10 +339,6 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
             {/* Right Spatial Column: Oversized Real Media Specimen (7 Cols) */}
             <div className="lg:col-span-7">
               <div
-                ref={mediaRef}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={handleMouseLeave}
                 onClick={handleNavigate}
                 data-cursor="EXAMINE"
                 role="button"
@@ -359,15 +384,16 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
                         project={project}
                         aspectRatio="aspect-[16/10] sm:aspect-[21/11]"
                         isHovered={isHovered}
-                        priority={false}
+                        priority={index === 0}
                         showCaption={false}
                       />
                     </div>
 
+                    {/* Interactive Sheen Glaze */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/[0.05] via-transparent to-transparent pointer-events-none opacity-40 group-hover/media:opacity-100 transition-opacity duration-500" />
                   </motion.div>
 
-                  {/* Minimalist Telemetry Readout */}
+                  {/* Minimalist Telemetry Readout Under Media */}
                   <div className="pt-3 px-1 flex items-center justify-between font-mono text-[10px] sm:text-[11px] opacity-75">
                     <span className="lowercase opacity-80 truncate max-w-[240px]">
                       {project.slug}
@@ -393,7 +419,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
             </div>
           </div>
 
-          {/* Bottom Floating Bar: Technical Tools Tokens */}
+          {/* Bottom Spatial Floating Bar: Tools Badges & Manifest Spec */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-current/10 font-mono text-[11px] opacity-70">
             <div className="flex flex-wrap gap-2">
               {project.tools.slice(0, 6).map((tool) => (
@@ -409,7 +435,7 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
             <div className="flex items-center gap-4 text-[10px] opacity-65">
               <span>{project.status.toUpperCase()} DEPLOYMENT</span>
               <span className="opacity-30">·</span>
-              <span>SCENE {sceneNumber} / 03</span>
+              <span>SCENE {index + 1} / {total}</span>
             </div>
           </div>
         </div>
@@ -418,17 +444,17 @@ const ProjectGridScene: React.FC<ProjectGridSceneProps> = ({
   );
 };
 
-export const ProjectGrid: React.FC<ProjectGridProps> = ({ projects }) => {
+export const PinnedProjectSequence: React.FC<PinnedProjectSequenceProps> = ({ projects }) => {
   if (!projects || projects.length === 0) return null;
 
   return (
     <div className="relative w-full space-y-12 sm:space-y-16">
       {projects.map((project, index) => (
-        <ProjectGridScene
+        <ProjectScene
           key={project.slug}
           project={project}
-          sceneNumber={String(index + 2).padStart(2, '0')}
-          isLastScene={index === projects.length - 1}
+          index={index}
+          total={projects.length}
         />
       ))}
     </div>

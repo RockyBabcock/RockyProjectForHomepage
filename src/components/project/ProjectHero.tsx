@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { ExternalLink, Github, ShieldCheck, Activity } from 'lucide-react';
 import { Project } from '../../types';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -105,9 +106,11 @@ export const ProjectHero: React.FC<ProjectHeroProps> = ({ project, onOpenLightbo
 
       {/* 2. Hero Artifact: Dominating First Viewport */}
       <div className="relative group/hero-artifact pt-2">
-        <div
+        <motion.div
+          layoutId={`project-media-frame-${project.slug}`}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           onClick={onOpenLightbox}
-          className={`cursor-pointer transition-all duration-500 ${
+          className={`cursor-pointer transition-all duration-500 rounded-sm overflow-hidden ${
             onOpenLightbox ? 'hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)]' : ''
           }`}
         >
@@ -118,7 +121,7 @@ export const ProjectHero: React.FC<ProjectHeroProps> = ({ project, onOpenLightbo
             allowZoom={true}
             showCaption={false}
           />
-        </div>
+        </motion.div>
 
         {/* Click to expand pill */}
         {onOpenLightbox && (

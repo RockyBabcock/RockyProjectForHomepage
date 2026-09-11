@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Terminal, Grid, Sun, Moon, Compass } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Terminal, Grid, Sun, Moon } from 'lucide-react';
 import { projectsData } from '../data/projects';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useSurfaceMode } from '../context/SurfaceModeContext';
+import { useProjectAtmosphere } from '../context/ProjectAtmosphereContext';
 
 interface ProjectSequenceNavigatorProps {
   onToggleGrid?: () => void;
@@ -15,41 +16,20 @@ export const ProjectSequenceNavigator: React.FC<ProjectSequenceNavigatorProps> =
   onOpenCommand,
 }) => {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
   const { localizeText } = useLanguage();
   const { mode, toggleMode } = useSurfaceMode();
   const isDark = mode === 'dark';
+  const { activeSlug, setActiveSlug } = useProjectAtmosphere();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Track active project based on URL or scroll position on homepage
+  // Sync index with activeSlug from ProjectAtmosphereContext
   useEffect(() => {
-    if (location.pathname.startsWith('/projects/')) {
-      const slug = location.pathname.replace('/projects/', '');
-      const idx = projectsData.findIndex((p) => p.slug === slug);
+    if (activeSlug) {
+      const idx = projectsData.findIndex((p) => p.slug === activeSlug);
       if (idx !== -1) setActiveProjectIndex(idx);
-    } else {
-      // Observe sections on main catalogue
-      const handleScroll = () => {
-        const p1 = document.getElementById('project-plate-01');
-        const p2 = document.getElementById('project-plate-02');
-        const p3 = document.getElementById('project-plate-03');
-
-        const scrollY = window.scrollY + window.innerHeight * 0.45;
-
-        if (p3 && scrollY >= p3.offsetTop) {
-          setActiveProjectIndex(2);
-        } else if (p2 && scrollY >= p2.offsetTop) {
-          setActiveProjectIndex(1);
-        } else if (p1 && scrollY >= p1.offsetTop) {
-          setActiveProjectIndex(0);
-        }
-      };
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => window.removeEventListener('scroll', handleScroll);
     }
-  }, [location.pathname]);
+  }, [activeSlug]);
 
   const currentProject = projectsData[activeProjectIndex] || projectsData[0];
   const prevProject = projectsData[(activeProjectIndex - 1 + projectsData.length) % projectsData.length];
@@ -58,10 +38,14 @@ export const ProjectSequenceNavigator: React.FC<ProjectSequenceNavigatorProps> =
   const handleJump = (index: number) => {
     setActiveProjectIndex(index);
     const target = projectsData[index];
+    setActiveSlug(target.slug);
+
     if (location.pathname.startsWith('/projects/')) {
       navigate(`/projects/${target.slug}`);
     } else {
-      const el = document.getElementById(`project-plate-${target.number}`);
+      const el =
+        document.getElementById(`project-${target.slug}`) ||
+        document.getElementById(`project-plate-${target.number}`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       } else {
