@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X, Sun, Moon, Search } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -12,6 +12,7 @@ interface NavigationProps {
 
 export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenCommand }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
   const { t } = useLanguage();
   const { mode, toggleMode } = useSurfaceMode();
@@ -21,12 +22,23 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
   const isArchiveActive = location.pathname.startsWith('/archive');
   const isLabsActive = location.pathname.startsWith('/experiments');
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header
       className={`sticky top-0 z-40 w-full transition-colors duration-300 ${
         isDark
-          ? 'bg-[#030014]/90 text-[#F5F3EF]'
-          : 'bg-[#F5F4ED]/90 text-[#171717]'
+          ? 'bg-[#030014]/85 text-[#F5F3EF]'
+          : 'bg-[#F5F4ED]/85 text-[#171717]'
       } backdrop-blur-md border-b ${isDark ? 'border-violet-950/30' : 'border-[#E2DFD2]/60'}`}
     >
       <div className="max-w-[1520px] mx-auto px-6 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
@@ -34,11 +46,14 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
         <div className="flex items-baseline gap-4">
           <Link
             to="/"
-            className="group inline-flex items-baseline tracking-[-0.03em] select-none"
+            className="group inline-flex items-baseline gap-2.5 tracking-[-0.03em] select-none"
             aria-label="Rocky Babcock — Studio"
           >
-            <span className="font-serif text-2xl sm:text-[26px] font-normal tracking-[-0.02em] transition-colors group-hover:opacity-70">
+            <span className="font-serif text-2xl sm:text-[26px] font-normal tracking-[-0.02em] transition-colors group-hover:opacity-75">
               Rocky Babcock
+            </span>
+            <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.22em] opacity-35">
+              Studio
             </span>
           </Link>
         </div>
@@ -173,6 +188,16 @@ export const Navigation: React.FC<NavigationProps> = ({ onOpenStatement, onOpenC
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+      </div>
+
+      {/* Subtle Scroll Progress Indicator at header base */}
+      <div className="absolute bottom-0 left-0 h-[1.5px] w-full bg-transparent overflow-hidden pointer-events-none">
+        <div
+          className={`h-full transition-[width] duration-150 ease-out ${
+            isDark ? 'bg-gradient-to-r from-violet-600 to-indigo-400' : 'bg-gradient-to-r from-[#171717] to-[#8B5CF6]'
+          }`}
+          style={{ width: `${scrollProgress}%` }}
+        />
       </div>
 
       {/* Mobile Menu Overlay */}

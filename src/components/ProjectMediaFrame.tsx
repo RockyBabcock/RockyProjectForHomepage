@@ -208,17 +208,14 @@ export const ProjectMediaFrame: React.FC<ProjectMediaFrameProps> = ({
                   {project.type}
                 </span>
                 {project.demo && (
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-semibold transition-opacity hover:opacity-100 ${
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-semibold opacity-80 ${
                       isDark ? 'text-violet-300' : 'text-[#8B5CF6]'
                     }`}
                   >
-                    <span>Open Live Deployed Site</span>
+                    <span>Live Deployment Active</span>
                     <ExternalLink className="w-3 h-3" />
-                  </a>
+                  </span>
                 )}
               </div>
             </div>
